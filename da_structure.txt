@@ -1,0 +1,19 @@
+DA_new.hdf5:
+	a06m130_etas:
+		 <HDF5 dataset "a06m130_etas": shape (7, 567, 49, 23, 2), type "<f8">
+	a06m130_kaon:
+		 <HDF5 dataset "a06m130_kaon": shape (7, 567, 49, 23, 2), type "<f8">
+	a06m130_pion:
+		 <HDF5 dataset "a06m130_pion": shape (7, 567, 49, 23, 2), type "<f8">
+	a09m130_etas:
+		 <HDF5 dataset "a09m130_etas": shape (7, 737, 33, 15, 2), type "<f8">
+	a09m130_kaon:
+		 <HDF5 dataset "a09m130_kaon": shape (7, 737, 33, 15, 2), type "<f8">
+	a09m130_pion:
+		 <HDF5 dataset "a09m130_pion": shape (7, 737, 33, 15, 2), type "<f8">
+	a12m130_etas:
+		 <HDF5 dataset "a12m130_etas": shape (7, 987, 25, 15, 2), type "<f8">
+	a12m130_kaon:
+		 <HDF5 dataset "a12m130_kaon": shape (7, 932, 25, 15, 2), type "<f8">
+	a12m130_pion:
+		 <HDF5 dataset "a12m130_pion": shape (7, 829, 25, 15, 2), type "<f8">
