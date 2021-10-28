@@ -88,7 +88,7 @@ def quasi_vs_lc_plot(x_ls, y_ls, quasi_da, lic_da, pz, meson):
     ax = plt.axes(plt_axes)
     ax.fill_between(x_ls, [(val.mean + val.sdev) for val in quasi_da], [(val.mean - val.sdev) for val in quasi_da], color=color_list[0], alpha=0.5, label='Quasi')
     ax.fill_between(y_ls, [(val.mean + val.sdev) for val in lic_da], [(val.mean - val.sdev) for val in lic_da], color=color_list[1], alpha=0.7, label='Light-cone')
-    #ax.plot(x_ls[200:301], [6*x*(1-x) for x in x_ls[200:301]], color=color_list[2], label=r'$y=6x(1-x)$')
+    #ax.plot(y_ls, [6*x*(1-x) for x in y_ls], color=color_list[2], label=r'$y=6x(1-x)$')
     ax.axvline(0.5, color='k', linestyle='--')
     #ax.axvline(0, color='k', linestyle='--')
     #ax.axvline(1, color='k', linestyle='--')
@@ -159,3 +159,36 @@ def lcda_mix_pz_plot(meson, x_ls):
     plt.savefig(meson+'/paper/lcda_Pz_mix.pdf', transparent=True)
     plt.show()
     return 
+
+def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
+    delta_ls = []
+    for idx in range(len(x_ls)):
+        delta = abs(large_mom_lic_da[idx].mean - mom_n_lic_da[idx].mean) # system error
+        delta_ls.append(delta)
+
+    y1 = np.array([(val.mean + val.sdev) for val in large_mom_lic_da]) + np.array(delta_ls)
+    y2 = np.array([(val.mean - val.sdev) for val in large_mom_lic_da]) - np.array(delta_ls)
+
+    fig = plt.figure(figsize=fig_size)
+    ax = plt.axes(plt_axes)
+
+    a2 = gv.gvar(0.25, 0.15) # sum rule
+    a4 = gv.gvar(-0.015, 0.025)
+    ax.fill_between(x_ls, [sum_rule(x, a2, a4).mean + sum_rule(x, a2, a4).sdev for x in x_ls], [sum_rule(x, a2, a4).mean - sum_rule(x, a2, a4).sdev for x in x_ls], color=color_list[1], label='Sum rule', alpha=0.4)
+
+    ax.fill_between(x_ls, y1, y2, color=color_list[0], alpha=0.5, label='This work')
+    ax.plot(x_ls, [6*x*(1-x) for x in x_ls], color=color_list[2], label='Asymptotic') # only plot between 0 and 1
+
+    ax.axvline(0.5, color='k', linestyle='--')
+    ax.axvline(0, color='k', linestyle='--')
+    ax.axvline(1, color='k', linestyle='--')
+    ax.axhline(0, color='k', linestyle='--')
+    #ax.set_title('DA light-cone Pz to infty', **fs_p)
+    ax.set_xlabel(x_label, **fs_p)
+    ax.set_ylim([-0.19, 1.55])
+    ax.set_xlim([-0.5, 1.5])
+    ax.legend(loc='upper right')
+    ax.tick_params(direction='in', **ls_p)
+    plt.savefig(meson+'/paper/lcda_Pz_to_infty.pdf', transparent=True)
+    plt.show()
+    return

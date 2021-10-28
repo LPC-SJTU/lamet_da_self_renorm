@@ -31,10 +31,12 @@ class MESON_DA_HYB():
             da_a06_conf_ls = self.da_data('a06', 'DA_new.hdf5') # conf, z in z_ls_extend
             da_a09_conf_ls = self.da_data('a09', 'DA_new.hdf5')
             da_a12_conf_ls = self.da_data('a12', 'DA_new.hdf5')
+            if not os.path.exists(self.meson+'/mom='+str(self.mom)+'/'): # for some temp save
+                os.makedirs(self.meson+'/mom='+str(self.mom)+'/') 
             gv.dump(da_a06_conf_ls, self.meson+'/mom='+str(self.mom)+'/da_a06_conf_ls')
             gv.dump(da_a09_conf_ls, self.meson+'/mom='+str(self.mom)+'/da_a09_conf_ls')
             gv.dump(da_a12_conf_ls, self.meson+'/mom='+str(self.mom)+'/da_a12_conf_ls')
-            
+
         da_a06_conf_ls = gv.load(self.meson+'/mom='+str(self.mom)+'/da_a06_conf_ls')
         da_a09_conf_ls = gv.load(self.meson+'/mom='+str(self.mom)+'/da_a09_conf_ls')
         da_a12_conf_ls = gv.load(self.meson+'/mom='+str(self.mom)+'/da_a12_conf_ls')
@@ -129,8 +131,6 @@ class MESON_DA_HYB():
         return da_conf_ls
 
     def da_hyb(self, da_a06_conf_ls, da_a09_conf_ls, da_a12_conf_ls, zR_dic):
-        if not os.path.exists(self.meson+'/mom='+str(self.mom)+'/'): # for some temp save
-            os.makedirs(self.meson+'/mom='+str(self.mom)+'/') 
         x_ls = self.x_ls # after FT, for quasi
 
         def renorm(da_conf_ls, key): 
