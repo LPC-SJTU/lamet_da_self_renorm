@@ -5,7 +5,7 @@ from head import *
 
 # %%
 class MESON_DA_HYB():
-    def __init__(self, meson, mom, x_ls, x_ls_matching, y_ls_matching, extend_point, extend_fit_start, t_dic, fit_1, fit_2, rotate, lcda_fit):
+    def __init__(self, meson, mom, x_ls, x_ls_matching, y_ls_matching, extend_point, extend_fit_start, t_dic, gs_extract, fit_1, fit_2, rotate, lcda_fit, constant_fit):
         self.meson = meson # str: 'pion', 'kaon', 'etas'
         self.mom = mom # int: 6, 8, 10, 12
         self.pz = mom_to_pz * mom # mom=8 corresponding to pz=1.72, used after the continuous limit
@@ -16,18 +16,28 @@ class MESON_DA_HYB():
         self.extend_point = extend_point
         self.lambda_max = self.lambda_ls[extend_point] # for lambda bigger than this max, use extend function
         self.extend_fit_start = extend_fit_start # start to fit extend func from this idx
-        self.t_dic = t_dic
+        self.t_dic = t_dic # t range for avg or const fit
+        self.gs_extract = gs_extract # whether extract gs
         self.fit_1 = fit_1 # True/False, whether fit to get continuous limit
         self.fit_2 = fit_2 # True/False, whether fit to extend hybrid data in the coordinate space
         self.rotate = rotate # True/False, whether do the rotate, for kaon should be False
         self.lcda_fit = lcda_fit # whether do the endpoints fit for lcda plot
+        self.constant_fit = constant_fit
 
     def main(self, zR_dic):
         ### read data, prepare for renormalization ###
         ##############################################
-        da_a06_conf_ls = self.da_data('a06', 'DA_new.hdf5') # conf, z in z_ls_extend
-        da_a09_conf_ls = self.da_data('a09', 'DA_new.hdf5')
-        da_a12_conf_ls = self.da_data('a12', 'DA_new.hdf5')
+        if self.gs_extract == True:
+            da_a06_conf_ls = self.da_data('a06', 'DA_new.hdf5') # conf, z in z_ls_extend
+            da_a09_conf_ls = self.da_data('a09', 'DA_new.hdf5')
+            da_a12_conf_ls = self.da_data('a12', 'DA_new.hdf5')
+            gv.dump(da_a06_conf_ls, self.meson+'/mom='+str(self.mom)+'/da_a06_conf_ls')
+            gv.dump(da_a09_conf_ls, self.meson+'/mom='+str(self.mom)+'/da_a09_conf_ls')
+            gv.dump(da_a12_conf_ls, self.meson+'/mom='+str(self.mom)+'/da_a12_conf_ls')
+            
+        da_a06_conf_ls = gv.load(self.meson+'/mom='+str(self.mom)+'/da_a06_conf_ls')
+        da_a09_conf_ls = gv.load(self.meson+'/mom='+str(self.mom)+'/da_a09_conf_ls')
+        da_a12_conf_ls = gv.load(self.meson+'/mom='+str(self.mom)+'/da_a12_conf_ls')
 
         ### renorm -> continuous limit -> extrapolation -> FT -> quasi ###
         ##########################################
@@ -66,19 +76,45 @@ class MESON_DA_HYB():
 
         an_pi_bs = bootstrap(an_pi, N_re) # resample
 
+        an_pi_bs_avg = gv.dataset.avg_data(an_pi_bs, bstrap=True)
+
         an_pi_norm = [] # conf, z (complex number)
-        for n_conf in range(N_re):
-            an_pi_norm.append([])
-            for idz in range(Nz): 
+        print('>>> extracting g.s. from t plot of '+a_str+': ')
+        for n_conf in tqdm(range(N_re)):
+            an_pi_norm.append([1+0j])
+            for idz in range(1, Nz): 
                 re_ls = []
                 im_ls = []
+                re_avg_ls = []
+                im_avg_ls = []
                 for t in t_ls:
                     idt = t - 1
                     re_ls.append( an_pi_bs[n_conf][idz][idt][0] / an_pi_bs[n_conf][0][idt][0] ) # normalization
-
                     im_ls.append( an_pi_bs[n_conf][idz][idt][1] / an_pi_bs[n_conf][0][idt][0] )
+
+                    re_avg_ls.append( an_pi_bs_avg[idz][idt][0] / an_pi_bs_avg[0][idt][0] )
+                    im_avg_ls.append( an_pi_bs_avg[idz][idt][1] / an_pi_bs_avg[0][idt][0] )
+                
                 real = np.average(re_ls)
                 imag = np.average(im_ls)
+
+                ######## constant fit ########
+                if self.constant_fit == True:
+                    def fcn(x, p):
+                        return p['ratio'] + 0*x
+
+                    priors = gv.BufferDict()
+                    priors['ratio'] = gv.gvar(0, 10)
+
+                    y_re = add_sdev(re_ls, re_avg_ls)
+                    y_im = add_sdev(im_ls, im_avg_ls)
+
+                    fit_result_re = lsf.nonlinear_fit(data=(np.array(t_ls), y_re), prior=priors, fcn=fcn, maxit=10000, svdcut=1e-100, fitter='scipy_least_squares')
+
+                    fit_result_im = lsf.nonlinear_fit(data=(np.array(t_ls), y_im), prior=priors, fcn=fcn, maxit=10000, svdcut=1e-100, fitter='scipy_least_squares')
+
+                    real = fit_result_re.p['ratio'].mean
+                    imag = fit_result_im.p['ratio'].mean
 
                 an_pi_norm[n_conf].append( complex(real, imag) )
 
