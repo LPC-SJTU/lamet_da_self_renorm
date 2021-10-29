@@ -21,6 +21,7 @@ from scipy.misc import derivative as drv
 fig_width = 6.75 # in inches, 2x as wide as APS column
 gr        = 1.618034333 # golden ratio
 fig_size  = (fig_width, fig_width / gr)
+fig_size_lc = (fig_width * 0.8, fig_width * 0.8)
 gridspec_sub = {'height_ratios': [3, 1], 'left': 0.12, 'right': 0.99, 'bottom': 0.15, 'top': 0.98}
 plt_axes  = [0.1,0.12,0.85,0.8]
 errorp = {"markersize": 5, "mfc": "none", "linestyle": "none"} # circle
@@ -68,8 +69,12 @@ color_list = ['orange','dodgerblue','blueviolet','deeppink','indigo','rosybrown'
 fmt_ls = ['o', 'D', 's', '^']
 
 # labels
-lambda_label = r"$\lambda = p_z * z$"
+lambda_label = r"$\lambda = z P_z$"
 x_label = r"$x$"
+hyb_ro_re_label = r'$Re[e^{\frac{i z P_z}{2}} H_{\pi}(z)]$'
+hyb_ro_im_label = r'$Im[e^{\frac{i z P_z}{2}} H_{\pi}(z)]$'
+hyb_re_label = r'$Re[H_{\pi}(z)]$'
+hyb_im_label = r'$Im[H_{\pi}(z)]$'
 
 def interp_1d(x_in, y_in, x_out, method="linear"): # interpolation
     f=interpolate.interp1d(x_in, y_in, kind=method)
@@ -199,7 +204,7 @@ def large_mom_limit(y_ls, mom_n1_lic_da, mom_n2_lic_da, mom_n3_lic_da, mom_ls, m
         print(a1)
         
     print('mom=inf, a2: ')
-    a2 = calc_an(y_ls, large_mom_lic_da, 1)
+    a2 = calc_an(y_ls, large_mom_lic_da, 2)
     print(a2)
 
     print('Light-cone at inf pz integral within [0, 1]: ')
@@ -208,7 +213,7 @@ def large_mom_limit(y_ls, mom_n1_lic_da, mom_n2_lic_da, mom_n3_lic_da, mom_ls, m
 
     return large_mom_lic_da
 
-def sum_rule(x, a2, a4):
+def sum_rule(meson, x, a1, a2, a4):
     def C1(x, a):
         return 2*a*x
     def C2(x, a):
@@ -218,4 +223,8 @@ def sum_rule(x, a2, a4):
     def C4(x, a):
         return 1/4 * ( 2 * x * (4+a-1) * C3(x, a) - (4+2*a-2) * C2(x, a) )
 
-    return 6 * x * (1-x) * ( 1 + C2(2*x-1, 3/2)*a2 + C4(2*x-1, 3/2)*a4 )
+    if meson == 'pion':
+        return 6 * x * (1-x) * ( 1 + C2(2*x-1, 3/2)*a2 + C4(2*x-1, 3/2)*a4 )
+
+    if meson == 'kaon':
+        return 6 * x * (1-x) * ( 1 + C1(2*x-1, 3/2)*a1 + C2(2*x-1, 3/2)*a2 )
