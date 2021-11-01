@@ -50,7 +50,7 @@ def paper_plot_extra_ro(n=0.1567, mom='10'):#(n=1.15):
     ax.errorbar(lam_dic['mom='+mom], [val.mean for val in hyb_ro_avg['mom='+mom]], [val.sdev for val in hyb_ro_avg['mom='+mom]], color=color_list[int(mom)-10], label='Lattice data, Pz=2.15 GeV', fmt='o', **errorb)
     ini = 216
     fin = ini+10
-    ax.errorbar(lam_ls[ini-2:fin], [val.mean for val in bft_ro[ini-2:fin]], yerr=[val.sdev for val in bft_ro[ini-2:fin]], color=color_list[1], label='Polynomial', fmt='D',  **errorb)
+    ax.errorbar(lam_ls[ini-2:fin], [val.mean for val in bft_ro[ini-2:fin]], yerr=[val.sdev for val in bft_ro[ini-2:fin]], color=color_list[1], label='Polynomial fit', fmt='D',  **errorb)
     ax.plot(lam_ls_a2, a2_bft, color=color_list[2], label = r'$cx^n (1-x)^n, n = $'+str(round(n,2)))
     ax.axvline(lam_ls[ini], ymin=0.1, ymax=0.45, color='g', linestyle='--', label=r'$\lambda_L$')
     ax.axhline(0, color='k', linestyle='--')
@@ -165,6 +165,26 @@ def quasi_vs_lc_plot(x_ls, y_ls, quasi_da, lic_da, pz, meson):
     ax.legend(loc='upper right')
     ax.tick_params(direction='in', **ls_p)
     plt.savefig(meson+'/paper/quasi_v.s._light-cone, Pz='+str(pz)+'.pdf', transparent=True)
+    plt.show()
+
+def quasi_lc_lc_fit_plot(x_ls, y_ls, y_ls_, quasi_da, lic_da, lic_da_, pz, meson):
+    fig = plt.figure(figsize=fig_size)
+    ax = plt.axes(plt_axes)
+    ax.fill_between(x_ls, [(val.mean + val.sdev) for val in quasi_da], [(val.mean - val.sdev) for val in quasi_da], color=color_list[0], alpha=0.5, label='Quasi')
+    ax.fill_between(y_ls_, [(val.mean + val.sdev) for val in lic_da_], [(val.mean - val.sdev) for val in lic_da_], color=color_list[1], alpha=0.7, label='Light-cone')
+    ax.fill_between(y_ls, [(val.mean + val.sdev) for val in lic_da], [(val.mean - val.sdev) for val in lic_da], color='red', alpha=0.5, label='Extrapolated light-cone')
+    #ax.plot(y_ls, [6*x*(1-x) for x in y_ls], color=color_list[2], label=r'$y=6x(1-x)$')
+    ax.axvline(0.5, color='green', linestyle='--')
+    ax.axvline(0, color='k', linestyle='--')
+    #ax.axvline(1, color='k', linestyle='--')
+    ax.axhline(0, color='k', linestyle='--')
+    #ax.set_title('DA hybrid quasi v.s. light-cone '+plot_type+', Pz='+str(pz), **fs_p)
+    ax.set_ylim([-0.19, 1.5])
+    ax.set_xlim([-0.5, 1.5])
+    ax.set_xlabel(x_label, **fs_p)
+    ax.legend(loc='upper right')
+    ax.tick_params(direction='in', **ls_p)
+    plt.savefig(meson+'/paper/quasi_lc_lc_fit, Pz='+str(pz)+'.pdf', transparent=True)
     plt.show()
 
 def continuous_limit_pz_mix(meson, mom_ls):

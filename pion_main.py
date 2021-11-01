@@ -92,7 +92,12 @@ def pion_main():
     gv.dump(mom_10_lic_da, 'pion/mom=10/mom_10_lic_da')
     quasi_vs_lc_plot(x_ls, mom_10_y_ls, mom_10_quasi_da, mom_10_lic_da, pz=2.15, meson='pion')
     y_ls = mom_10_y_ls
+
+    ## without lc fit ##
+    pion_mom_10_ = MESON_DA_HYB(meson, 10, x_ls, x_ls_matching, y_ls_matching, extend_point['mom=10'], extend_fit_start['mom=10'], t_dic['mom=10'], gs_extract=False, fit_1=False, fit_2=False, rotate=True, lcda_fit=False, constant_fit=constant_fit)
+    mom_10_kernel_, mom_10_quasi_da_, mom_10_y_ls_, mom_10_lic_da_ = pion_mom_10_.main(zR_dic)
     
+    quasi_lc_lc_fit_plot(x_ls, mom_10_y_ls, mom_10_y_ls_, mom_10_quasi_da, mom_10_lic_da, mom_10_lic_da_, pz=2.15, meson='pion')
 
     ################################################
     mom_6_lic_da = gv.load('pion/mom=6/mom_6_lic_da')

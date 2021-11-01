@@ -77,16 +77,16 @@ def kaon_main():
     # quasi_vs_lc_plot(x_ls, mom_6_y_ls, mom_6_quasi_da, mom_6_lic_da, pz=1.29, meson='kaon')
     # y_ls = mom_6_y_ls
 
-    ################################################
-    lambda_ls = z_ls_da * 2*np.pi / (0.0574*96) * 8
-    print('mom=8:')
-    print( 'For lambda bigger than ' + str(lambda_ls[extend_point['mom=8']]) + ', use extrapolation function.' )
-    print( 'Lambda starts from ' + str(lambda_ls[extend_fit_start['mom=8']]) + ' are included in the extrapolation fit.' )
-    kaon_mom_8 = MESON_DA_HYB(meson, 8, x_ls, x_ls_matching, y_ls_matching, extend_point['mom=8'], extend_fit_start['mom=8'], t_dic['mom=8'], gs_extract=False, fit_1=False, fit_2=False, rotate=False, lcda_fit=lcda_fit, constant_fit=constant_fit)
-    mom_8_kernel, mom_8_quasi_da, mom_8_y_ls, mom_8_lic_da = kaon_mom_8.main(zR_dic)
-    gv.dump(mom_8_lic_da, 'kaon/mom=8/mom_8_lic_da')
-    quasi_vs_lc_plot(x_ls, mom_8_y_ls, mom_8_quasi_da, mom_8_lic_da, pz=1.72, meson='kaon')
-    y_ls = mom_8_y_ls
+    # ################################################
+    # lambda_ls = z_ls_da * 2*np.pi / (0.0574*96) * 8
+    # print('mom=8:')
+    # print( 'For lambda bigger than ' + str(lambda_ls[extend_point['mom=8']]) + ', use extrapolation function.' )
+    # print( 'Lambda starts from ' + str(lambda_ls[extend_fit_start['mom=8']]) + ' are included in the extrapolation fit.' )
+    # kaon_mom_8 = MESON_DA_HYB(meson, 8, x_ls, x_ls_matching, y_ls_matching, extend_point['mom=8'], extend_fit_start['mom=8'], t_dic['mom=8'], gs_extract=False, fit_1=False, fit_2=False, rotate=False, lcda_fit=lcda_fit, constant_fit=constant_fit)
+    # mom_8_kernel, mom_8_quasi_da, mom_8_y_ls, mom_8_lic_da = kaon_mom_8.main(zR_dic)
+    # gv.dump(mom_8_lic_da, 'kaon/mom=8/mom_8_lic_da')
+    # quasi_vs_lc_plot(x_ls, mom_8_y_ls, mom_8_quasi_da, mom_8_lic_da, pz=1.72, meson='kaon')
+    # y_ls = mom_8_y_ls
 
     # ################################################
     # lambda_ls = z_ls_da * 2*np.pi / (0.0574*96) * 10
@@ -111,16 +111,16 @@ def kaon_main():
     # y_ls = mom_12_y_ls
 
 
-    ################################################
-    mom_6_lic_da = gv.load('kaon/mom=6/mom_6_lic_da')
-    mom_8_lic_da = gv.load('kaon/mom=8/mom_8_lic_da')
-    mom_10_lic_da = gv.load('kaon/mom=10/mom_10_lic_da')
-    mom_12_lic_da = gv.load('kaon/mom=12/mom_12_lic_da')
+    # ################################################
+    # mom_6_lic_da = gv.load('kaon/mom=6/mom_6_lic_da')
+    # mom_8_lic_da = gv.load('kaon/mom=8/mom_8_lic_da')
+    # mom_10_lic_da = gv.load('kaon/mom=10/mom_10_lic_da')
+    # mom_12_lic_da = gv.load('kaon/mom=12/mom_12_lic_da')
 
-    ### large momentum limit ###
-    ############################
-    large_mom_lic_da = large_mom_limit(y_ls, mom_6_lic_da, mom_8_lic_da, mom_10_lic_da, mom_ls=[6, 8, 10], meson=meson)
-    gv.dump(large_mom_lic_da, 'kaon/large_mom_lic_da')
+    # ### large momentum limit ###
+    # ############################
+    # large_mom_lic_da = large_mom_limit(y_ls, mom_6_lic_da, mom_8_lic_da, mom_10_lic_da, mom_ls=[6, 8, 10], meson=meson)
+    # gv.dump(large_mom_lic_da, 'kaon/large_mom_lic_da')
 
     # paper_plot_discrete_effect(mom=6, meson=meson)
     paper_plot_discrete_effect(mom=8, meson=meson)
@@ -128,9 +128,9 @@ def kaon_main():
     # paper_plot_discrete_effect(mom=12, meson=meson)
 
     # continuous_limit_pz_mix(meson, mom_ls=[6,8,10,12])
-    lcda_mix_pz_plot(meson, y_ls)
+    # lcda_mix_pz_plot(meson, y_ls)
 
-    lcda_large_pz_plot(meson, y_ls, mom_10_lic_da, large_mom_lic_da)
+    # lcda_large_pz_plot(meson, y_ls, mom_10_lic_da, large_mom_lic_da)
 
 if __name__ == '__main__':
     kaon_main()
