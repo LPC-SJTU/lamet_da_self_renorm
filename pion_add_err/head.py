@@ -22,6 +22,7 @@ fig_width = 6.75 # in inches, 2x as wide as APS column
 gr        = 1.618034333 # golden ratio
 fig_size  = (fig_width, fig_width / gr)
 fig_size_lc = (fig_width * 0.8, fig_width * 0.8)
+fig_size_lc_err = (fig_width * 0.8, fig_width * 0.6)
 gridspec_sub = {'height_ratios': [3, 1], 'left': 0.12, 'right': 0.99, 'bottom': 0.15, 'top': 0.98}
 plt_axes  = [0.1,0.12,0.85,0.8]
 errorp = {"markersize": 5, "mfc": "none", "linestyle": "none"} # circle
@@ -183,7 +184,6 @@ def norm_check(y_ls, lcda):
 
 def large_mom_limit(y_ls, mom_n1_lic_da, mom_n2_lic_da, mom_n3_lic_da, mom_ls, meson):
     large_mom_lic_da = []
-
     for idx in range(len(y_ls)):
         def fcn(x, p):
             return p['psi'] + p['c2']/(x**2)
