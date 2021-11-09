@@ -113,9 +113,9 @@ def pion_main():
     ################################################
     # paper_plot_discrete_effect(mom=6)
     # paper_plot_discrete_effect(mom=8)
-    paper_plot_discrete_effect(mom=10, if_rotate=False)
+    # paper_plot_discrete_effect(mom=10, if_rotate=False)
 
-    continuous_limit_pz_mix(meson, mom_ls=[6,8,10])
+    # continuous_limit_pz_mix(meson, mom_ls=[6,8,10])
     lcda_mix_pz_plot(meson, y_ls)
 
     lcda_large_pz_plot(meson, y_ls, mom_10_lic_da, large_mom_lic_da)

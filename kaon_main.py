@@ -122,13 +122,14 @@ def kaon_main():
     large_mom_lic_da = large_mom_limit(y_ls, mom_6_lic_da, mom_8_lic_da, mom_10_lic_da, mom_ls=[6, 8, 10], meson=meson)
     gv.dump(large_mom_lic_da, 'kaon/large_mom_lic_da')
 
-    # paper_plot_discrete_effect(mom=6, meson=meson)
+    # paper_plot_discrete_effect
+    # (mom=6, meson=meson)
     # paper_plot_discrete_effect(mom=8, meson=meson)
     # paper_plot_discrete_effect(mom=10, meson=meson)
     # paper_plot_discrete_effect(mom=12, meson=meson)
 
     # continuous_limit_pz_mix(meson, mom_ls=[6,8,10,12])
-    # lcda_mix_pz_plot(meson, y_ls)
+    lcda_mix_pz_plot(meson, y_ls)
 
     lcda_large_pz_plot(meson, y_ls, mom_10_lic_da, large_mom_lic_da)
 
