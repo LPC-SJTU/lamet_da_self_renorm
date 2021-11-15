@@ -23,7 +23,8 @@ gr        = 1.618034333 # golden ratio
 fig_size  = (fig_width, fig_width / gr)
 fig_size_lc = (fig_width * 0.8, fig_width * 0.8)
 gridspec_sub = {'height_ratios': [3, 1], 'left': 0.12, 'right': 0.99, 'bottom': 0.15, 'top': 0.98}
-plt_axes  = [0.1,0.12,0.85,0.8]
+plt_axes = [0.1,0.12,0.85,0.8]
+plt_axes_small = [0.12,0.15,0.8,0.75]
 errorp = {"markersize": 5, "mfc": "none", "linestyle": "none"} # circle
 errorb = {"markersize": 5, "mfc": "none", "linestyle": "none", "capsize": 3, "elinewidth": 1} # circle
 errorl = {"markersize": 5, "mfc": "none", "capsize": 3, "elinewidth": 1} # circle with line
@@ -40,9 +41,10 @@ lqcd = 0.1 #Lambda_QCD
 lms = 0.24451721864451428  #Lambda_MS
 k = 3.320
 d_pdf = -0.08183 #-0.1252 # for pdf
-d_da = 0.19 # 0.1 for a^2 order, 0.19 for a order, from Yushan
-m0_da = gv.gvar(-0.094, 0.024) # from Yushan
-mu = 2 # GeV
+d_da = 0.2 #0.19 # 0.1 for a^2 order, 0.19 for a order, from Yushan
+m0_da = gv.gvar(0.230,0.029) #gv.gvar(-0.094, 0.024) # from Yushan
+mu = 3 #2 # GeV, for renormalization
+mu_f = 2 # GeV, for factorization
 
 cf=4/3
 nf=3
@@ -72,6 +74,10 @@ fmt_ls = ['o', 'D', 's', '^']
 lambda_label = r"$\lambda = z P_z$"
 x_label = r"$x$"
 z_label = r"$z(fm)$"
+t_label = r"$t$"
+meff_local_label = r"$\ln(C(z=0, t) / C(z=0, t+1))$"
+meff_non_local_label = r"$\ln(C(z, t) / C(z, t+1))$"
+ratio_label = r"$C(z, t) / C(z=0, t)$"
 hyb_ro_re_label = r'$Re[e^{\frac{i z P_z}{2}} H_{\pi}(z)]$'
 hyb_ro_im_label = r'$Im[e^{\frac{i z P_z}{2}} H_{\pi}(z)]$'
 hyb_re_label = r'$Re[H_{\pi}(z)]$'

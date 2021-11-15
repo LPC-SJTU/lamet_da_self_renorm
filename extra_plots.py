@@ -76,7 +76,6 @@ def hyb_vs_RIMOM_plot():
     plt.savefig(meson+'/paper/renorm_comparison_mom_10_a06.pdf', transparent=True)
     plt.show()
 
-
 def compare_with_ZMSbar():
     from pdf_self_renorm import pdf_zR
     zR_dic, m_pdf_dic = pdf_zR()
@@ -162,7 +161,59 @@ def compare_with_ZMSbar():
     plt.savefig(meson+'/paper/compare_with_ZMS-bar_mom_'+str(mom)+'.pdf', transparent=True)
     plt.show()
 
+def mu_compare():
+    meson = 'pion'
+
+    x_ls_2 = gv.load('temp/x_ls_mu_2')
+    quasi_2 = gv.load('temp/quasi_mu_2')
+
+    y_ls_2 = gv.load('temp/y_ls_mu_2')
+    lc_2 = gv.load('temp/lc_mu_2')
+
+    x_ls_3 = gv.load('temp/x_ls_mu_3')
+    quasi_3 = gv.load('temp/quasi_mu_3')
+
+    y_ls_3 = gv.load('temp/y_ls_mu_3')
+    lc_3 = gv.load('temp/lc_mu_3')
+
+    fig = plt.figure(figsize=fig_size)
+    ax = plt.axes(plt_axes)
+    ax.fill_between(x_ls_2, [(val.mean + val.sdev) for val in quasi_2], [(val.mean - val.sdev) for val in quasi_2], color=color_list[0], alpha=0.5, label='Quasi_mu=2')
+    ax.fill_between(x_ls_3, [(val.mean + val.sdev) for val in quasi_3], [(val.mean - val.sdev) for val in quasi_3], color=color_list[1], alpha=0.5, label='Quasi_mu=3')
+
+    ax.axvline(0.5, color='green', linestyle='--')
+    ax.axvline(0, color='k', linestyle='--')
+    #ax.axvline(1, color='k', linestyle='--')
+    ax.axhline(0, color='k', linestyle='--')
+    #ax.set_title('DA hybrid quasi v.s. light-cone '+plot_type+', Pz='+str(pz), **fs_p)
+    ax.set_ylim([-0.19, 1.5])
+    ax.set_xlim([-0.5, 1.5])
+    ax.set_xlabel(x_label, **fs_p)
+    ax.legend(loc='upper right')
+    ax.tick_params(direction='in', **ls_p)
+    plt.savefig(meson+'/paper/mu_compare_quasi.pdf', transparent=True)
+    plt.show()
+
+
+    fig = plt.figure(figsize=fig_size)
+    ax = plt.axes(plt_axes)
+    ax.fill_between(y_ls_2, [(val.mean + val.sdev) for val in lc_2], [(val.mean - val.sdev) for val in lc_2], color=color_list[0], alpha=0.5, label='Light-cone_mu=2')
+    ax.fill_between(y_ls_3, [(val.mean + val.sdev) for val in lc_3], [(val.mean - val.sdev) for val in lc_3], color=color_list[1], alpha=0.5, label='Light-cone_mu=3')
+
+    ax.axvline(0.5, color='green', linestyle='--')
+    ax.axvline(0, color='k', linestyle='--')
+    #ax.axvline(1, color='k', linestyle='--')
+    ax.axhline(0, color='k', linestyle='--')
+    #ax.set_title('DA hybrid quasi v.s. light-cone '+plot_type+', Pz='+str(pz), **fs_p)
+    ax.set_ylim([-0.19, 1.5])
+    ax.set_xlim([-0.5, 1.5])
+    ax.set_xlabel(x_label, **fs_p)
+    ax.legend(loc='upper right')
+    ax.tick_params(direction='in', **ls_p)
+    plt.savefig(meson+'/paper/mu_compare_lc.pdf', transparent=True)
+    plt.show()
+
 # %%
-hyb_vs_RIMOM_plot()
+mu_compare()
 
 # %%

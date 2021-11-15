@@ -367,7 +367,7 @@ class MESON_DA_HYB():
             return (1+x-y)/(y-x)*(1-x)/(1-y)*np.log((y-x)/(1-x)) + (1+y-x)/(y-x)*x/y*np.log((y-x)/(-x))
         
         def H2(x, y):
-            return (1+y-x)/(y-x)*x/y*np.log(4*x*(y-x)*self.pz**2/mu**2) + (1+x-y)/(y-x)*((1-x)/(1-y)*np.log((y-x)/(1-x))-x/y)
+            return (1+y-x)/(y-x)*x/y*np.log(4*x*(y-x)*self.pz**2/mu_f**2) + (1+x-y)/(y-x)*((1-x)/(1-y)*np.log((y-x)/(1-x))-x/y)
 
         ### CB_matrix ###
         #################

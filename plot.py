@@ -138,7 +138,7 @@ def paper_plot_discrete_effect(mom, meson='pion', if_rotate=True):
     ax.set_xlabel(lambda_label, **fs_p)
     ax.tick_params(direction='in', **ls_p)
     if if_rotate == True:
-        ax.set_ylim([-0.4, 0.4])
+        ax.set_ylim([-0.3, 0.3])
         ax.set_title(hyb_ro_im_label, **fs_p)
         plt.savefig(meson+'/paper/discrete_effect_rotated_imag_part_Pz='+str(pz)+'GeV.pdf', transparent=True)
     elif if_rotate == False:
@@ -171,7 +171,11 @@ def quasi_lc_lc_fit_plot(x_ls, y_ls, y_ls_, quasi_da, lic_da, lic_da_, pz, meson
     fig = plt.figure(figsize=fig_size)
     ax = plt.axes(plt_axes)
     ax.fill_between(x_ls, [(val.mean + val.sdev) for val in quasi_da], [(val.mean - val.sdev) for val in quasi_da], color=color_list[0], alpha=0.5, label='Quasi')
+    gv.dump(x_ls, 'temp/x_ls_mu_3')
+    gv.dump(quasi_da, 'temp/quasi_mu_3')
     ax.fill_between(y_ls_, [(val.mean + val.sdev) for val in lic_da_], [(val.mean - val.sdev) for val in lic_da_], color=color_list[1], alpha=0.7, label='Light-cone')
+    gv.dump(y_ls_, 'temp/y_ls_mu_3')
+    gv.dump(lic_da_, 'temp/lc_mu_3')
     ax.fill_between(y_ls, [(val.mean + val.sdev) for val in lic_da], [(val.mean - val.sdev) for val in lic_da], color='red', alpha=0.5, label='Extrapolated light-cone')
     #ax.plot(y_ls, [6*x*(1-x) for x in y_ls], color=color_list[2], label=r'$y=6x(1-x)$')
     ax.axvline(0.5, color='green', linestyle='--')
@@ -221,14 +225,15 @@ def lcda_mix_pz_plot(meson, x_ls):
     mom_n1_lic_da = gv.load(meson+'/mom=6/mom_6_lic_da')
     mom_n2_lic_da = gv.load(meson+'/mom=8/mom_8_lic_da')
     mom_n3_lic_da = gv.load(meson+'/mom=10/mom_10_lic_da')
+    mom_n4_lic_da = gv.load(meson+'/mom=12/mom_12_lic_da')
 
     if meson == 'kaon':
         mom_n4_lic_da = gv.load(meson+'/mom=12/mom_12_lic_da')
 
-    fig = plt.figure(figsize=fig_size_lc)
+    fig = plt.figure(figsize=fig_size)
     ax = plt.axes(plt_axes)
     #if meson == 'kaon':
-        #ax.fill_between(x_ls, [(val.mean + val.sdev) for val in mom_n4_lic_da], [(val.mean - val.sdev) for val in mom_n4_lic_da], color=color_list[3], alpha=0.5, label=r'$a \to 0, Pz=2.58GeV$')
+    ax.fill_between(x_ls, [(val.mean + val.sdev) for val in mom_n4_lic_da], [(val.mean - val.sdev) for val in mom_n4_lic_da], color=color_list[3], alpha=0.5, label=r'$a \to 0, Pz=2.58GeV$')
     
     ax.fill_between(x_ls, [(val.mean + val.sdev) for val in mom_n1_lic_da], [(val.mean - val.sdev) for val in mom_n1_lic_da], color=color_list[0], alpha=0.4, label=r'$a \to 0, Pz=1.29GeV$')
     ax.fill_between(x_ls, [(val.mean + val.sdev) for val in mom_n2_lic_da], [(val.mean - val.sdev) for val in mom_n2_lic_da], color=color_list[1], alpha=0.4, label=r'$a \to 0, Pz=1.72GeV$')
@@ -242,7 +247,7 @@ def lcda_mix_pz_plot(meson, x_ls):
     ax.axhline(0, color='k', linestyle='--')
     ax.set_xlabel(x_label, **fs_p)
     ax.set_ylim([-0.19, 1.5])
-    ax.set_xlim([0, 1])
+    ax.set_xlim([-0.5, 1.5])
     ax.legend(loc='lower center')
     ax.tick_params(direction='in', **ls_p)
     plt.savefig(meson+'/paper/lcda_Pz_mix.pdf', transparent=True)
