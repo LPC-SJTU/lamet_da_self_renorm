@@ -5,8 +5,12 @@ import lsqfit as lsf
 import gvar as gv
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.special as sc
 import os
+import multiprocessing
 
+
+from multiprocessing.pool import ThreadPool
 from scipy.ndimage.filters import gaussian_filter
 from scipy.stats import norm
 from numpy.core.fromnumeric import shape
@@ -17,6 +21,7 @@ from tqdm import tqdm
 from scipy.optimize import curve_fit
 from scipy import special as sp
 from scipy.misc import derivative as drv
+from scipy import integrate
 
 fig_width = 6.75 # in inches, 2x as wide as APS column
 gr        = 1.618034333 # golden ratio
@@ -41,9 +46,9 @@ lqcd = 0.1 #Lambda_QCD
 lms = 0.24451721864451428  #Lambda_MS
 k = 3.320
 d_pdf = -0.08183 #-0.1252 # for pdf
-d_da = 0.2 #0.19 # 0.1 for a^2 order, 0.19 for a order, from Yushan
-m0_da = gv.gvar(0.230,0.029) #gv.gvar(-0.094, 0.024) # from Yushan
-mu = 3 #2 # GeV, for renormalization
+d_da = 0.19 # 0.1 for a^2 order, 0.19 for a order, from Yushan
+m0_da = gv.gvar(-0.094, 0.024) # from Yushan
+mu = 2 # GeV, for renormalization
 mu_f = 2 # GeV, for factorization
 
 cf=4/3
@@ -58,7 +63,8 @@ z_ls = np.arange(0.06, 1.26, 0.06) # read bare pdf then interpolated into z_ls
 z_ls_extend = np.arange(0.06, 1.56, 0.06) # extend f1 and zR
 z_ls_da = np.arange(0.06, 1.39, 0.06) # for interpolation of lambda
 zs_pz = 2 # for Z_hyb
-extend_length = 200 # how long for extension before FT, 200 about till lambda=120
+extend_length_quasi = 200 # how long for extension before FT, 200 about till lambda=120
+extend_length_lc = 1000 # how long for extension before FT, 200 about till lambda=120
 
 ## lcda endpoints fit
 fit_y1 = 0.05 # [0, y1] and [y4, 1] use fit 
@@ -128,6 +134,10 @@ def add_sdev(hyb_ls, hyb_avg):
         hyb_conf_gv.append( gv.gvar(hyb_conf[idx], hyb_avg[idx].sdev) )
 
     return hyb_conf_gv
+
+def f_matching(z2, mu2):
+    res = np.log( z2 * mu2 * np.exp(2*np.euler_gamma) / 4 )
+    return res
 
 def sum_ft(x_ls, fx_ls, delta_x, output_k): # coordinate to momentum
     ls = []
@@ -236,3 +246,4 @@ def sum_rule(meson, x, a1, a2, a4):
 
     if meson == 'kaon':
         return 6 * x * (1-x) * ( 1 + C1(2*x-1, 3/2)*a1 + C2(2*x-1, 3/2)*a2 )
+

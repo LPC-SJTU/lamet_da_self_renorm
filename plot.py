@@ -159,7 +159,7 @@ def quasi_vs_lc_plot(x_ls, y_ls, quasi_da, lic_da, pz, meson):
     #ax.axvline(1, color='k', linestyle='--')
     ax.axhline(0, color='k', linestyle='--')
     #ax.set_title('DA hybrid quasi v.s. light-cone '+plot_type+', Pz='+str(pz), **fs_p)
-    ax.set_ylim([-0.19, 1.5])
+    #ax.set_ylim([-0.19, 1.5])
     ax.set_xlim([-0.5, 1.5])
     ax.set_xlabel(x_label, **fs_p)
     ax.legend(loc='upper right')
@@ -233,7 +233,7 @@ def lcda_mix_pz_plot(meson, x_ls):
     fig = plt.figure(figsize=fig_size)
     ax = plt.axes(plt_axes)
     #if meson == 'kaon':
-    ax.fill_between(x_ls, [(val.mean + val.sdev) for val in mom_n4_lic_da], [(val.mean - val.sdev) for val in mom_n4_lic_da], color=color_list[3], alpha=0.5, label=r'$a \to 0, Pz=2.58GeV$')
+    #ax.fill_between(x_ls, [(val.mean + val.sdev) for val in mom_n4_lic_da], [(val.mean - val.sdev) for val in mom_n4_lic_da], color=color_list[3], alpha=0.5, label=r'$a \to 0, Pz=2.58GeV$')
     
     ax.fill_between(x_ls, [(val.mean + val.sdev) for val in mom_n1_lic_da], [(val.mean - val.sdev) for val in mom_n1_lic_da], color=color_list[0], alpha=0.4, label=r'$a \to 0, Pz=1.29GeV$')
     ax.fill_between(x_ls, [(val.mean + val.sdev) for val in mom_n2_lic_da], [(val.mean - val.sdev) for val in mom_n2_lic_da], color=color_list[1], alpha=0.4, label=r'$a \to 0, Pz=1.72GeV$')
