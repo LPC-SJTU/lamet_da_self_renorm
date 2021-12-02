@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import scipy.special as sc
 import os
 import multiprocessing
+import timeit
 
 
 from multiprocessing.pool import ThreadPool
@@ -140,17 +141,17 @@ def f_matching(z2, mu2):
     return res
 
 def sum_ft(x_ls, fx_ls, delta_x, output_k): # coordinate to momentum
-    ls = []
-    for idx in range(len(x_ls)):
-        ls.append( delta_x/(2*np.pi) * np.exp(1j * x_ls[idx] * output_k) * fx_ls[idx] )
-    val = np.sum(np.array(ls))
+    x_ls = np.array(x_ls)
+    fx_ls = np.array(fx_ls)
+    val = delta_x/(2*np.pi) * np.sum( np.exp(1j * x_ls * output_k) * fx_ls )
+
     return val
 
 def sum_ft_inv(k_ls, fk_ls, delta_k, output_x): # momentum to coordinate
-    ls = []
-    for idx in range(len(k_ls)):
-        ls.append( delta_k * np.exp(-1j * k_ls[idx] * output_x) * fk_ls[idx] )
-    val = np.sum(np.array(ls))
+    k_ls = np.array(k_ls)
+    fk_ls = np.array(fk_ls)
+    val = delta_k * np.sum( np.exp(-1j * k_ls * output_x) * fk_ls )
+
     return val
 
 def rotate(re_conf_z, im_conf_z, lam_ls, back): # 2D list, 0 for configs, 1 for z_ls
@@ -197,39 +198,39 @@ def norm_check(y_ls, lcda):
 
     return np.sum(val)*(y_ls[1]-y_ls[0])
 
-def large_mom_limit(y_ls, mom_n1_lic_da, mom_n2_lic_da, mom_n3_lic_da, mom_ls, meson):
-    large_mom_lic_da = []
+# def large_mom_limit(y_ls, mom_n1_lic_da, mom_n2_lic_da, mom_n3_lic_da, mom_ls, meson):
+#     large_mom_lic_da = []
 
-    for idx in range(len(y_ls)):
-        def fcn(x, p):
-            return p['psi'] + p['c2']/(x**2)
+#     for idx in range(len(y_ls)):
+#         def fcn(x, p):
+#             return p['psi'] + p['c2']/(x**2)
 
-        priors = gv.BufferDict()
-        priors['psi'] = gv.gvar(0.5, 2)
-        priors['c2'] = gv.gvar(1, 10)
+#         priors = gv.BufferDict()
+#         priors['psi'] = gv.gvar(0.5, 2)
+#         priors['c2'] = gv.gvar(1, 10)
 
-        pz_ls = np.array(mom_ls) * mom_to_pz
-        lcda_ls = [ mom_n1_lic_da[idx], mom_n2_lic_da[idx], mom_n3_lic_da[idx] ]
+#         pz_ls = np.array(mom_ls) * mom_to_pz
+#         lcda_ls = [ mom_n1_lic_da[idx], mom_n2_lic_da[idx], mom_n3_lic_da[idx] ]
 
-        fit_result = lsf.nonlinear_fit(data=(pz_ls, lcda_ls), prior=priors, fcn=fcn, maxit=10000, svdcut=1e-100, fitter='scipy_least_squares')
+#         fit_result = lsf.nonlinear_fit(data=(pz_ls, lcda_ls), prior=priors, fcn=fcn, maxit=10000, svdcut=1e-100, fitter='scipy_least_squares')
 
-        large_mom_lic_da.append(fit_result.p['psi'])
+#         large_mom_lic_da.append(fit_result.p['psi'])
 
-    # mom=inf
-    if meson == 'kaon':
-        print('mom=inf, a1: ')
-        a1 = calc_an(y_ls, large_mom_lic_da, 1)
-        print(a1)
+#     # mom=inf
+#     if meson == 'kaon':
+#         print('mom=inf, a1: ')
+#         a1 = calc_an(y_ls, large_mom_lic_da, 1)
+#         print(a1)
         
-    print('mom=inf, a2: ')
-    a2 = calc_an(y_ls, large_mom_lic_da, 2)
-    print(a2)
+#     print('mom=inf, a2: ')
+#     a2 = calc_an(y_ls, large_mom_lic_da, 2)
+#     print(a2)
 
-    print('Light-cone at inf pz integral within [0, 1]: ')
-    normal = norm_check(y_ls, large_mom_lic_da) 
-    print(normal)
+#     print('Light-cone at inf pz integral within [0, 1]: ')
+#     normal = norm_check(y_ls, large_mom_lic_da) 
+#     print(normal)
 
-    return large_mom_lic_da
+#     return large_mom_lic_da
 
 def sum_rule(meson, x, a1, a2, a4):
     def C1(x, a):

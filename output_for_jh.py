@@ -4,8 +4,8 @@ from head import *
 meson = 'pion'
 mom = 10
 
-hyb_re_ls = gv.load(meson+'/mom='+str(mom)+'/a_hyb_re_ls') # shape = (N_conf, N_z)
-hyb_im_ls = gv.load(meson+'/mom='+str(mom)+'/a_hyb_im_ls')
+hyb_re_ls = gv.load(meson+'/mom='+str(mom)+'/lc_re_ls') # shape = (N_conf, N_z)
+hyb_im_ls = gv.load(meson+'/mom='+str(mom)+'/lc_im_ls')
 
 a_re_avg = gv.dataset.avg_data(hyb_re_ls, bstrap=True)
 a_im_avg = gv.dataset.avg_data(hyb_im_ls, bstrap=True)
@@ -46,7 +46,7 @@ plt.show()
 
 
 # %%
-f = open('./continuum_limit.txt', 'w')
+f = open('./lc.txt', 'w')
 line = []
 line.append('z')
 line.append('\t')
@@ -80,3 +80,4 @@ for idz in range(len(z_ls_da)):
 f.close
 
 
+# %%

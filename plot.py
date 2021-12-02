@@ -1,24 +1,28 @@
 # %%
 from head import *
 
-def paper_plot_extra_ro(n=0.1567, mom='10'):#(n=1.15):
+def paper_plot_extra_ro(n=0.17, mom='10'):#(n=1.15):
+    meson = 'pion'
     hyb_re_ls = {}
     hyb_im_ls = {}
 
-    hyb_re_ls['mom='+mom] = gv.load('pion/mom='+mom+'/a_hyb_re_ls') # shape = (N_conf, N_z)
-    hyb_im_ls['mom='+mom] = gv.load('pion/mom='+mom+'/a_hyb_im_ls')
+    hyb_re_ls['mom='+mom] = gv.load(meson+'/mom='+str(mom)+'/quasi_re_ls') # shape = (N_conf, N_z)
+    hyb_im_ls['mom='+mom] = gv.load(meson+'/mom='+str(mom)+'/quasi_im_ls')
 
     lam_dic = {}
     hyb_ro_avg = {}
 
     pz = int(mom) * 0.215
     lam_ls = z_ls_da * ( 2*np.pi / (0.0574*96) * int(mom) * gev_fm ) / gev_fm
+    # lam_ls = gv.load(meson+'/mom='+str(mom)+'/lam_ls')
+
+
     hyb_re_ro, hyb_im_ro = rotate(hyb_re_ls['mom='+mom], hyb_im_ls['mom='+mom], lam_ls, back=False)
 
     lam_dic['mom='+mom] = lam_ls
     hyb_ro_avg['mom='+mom] = gv.dataset.avg_data(hyb_re_ro, bstrap=True)
 
-    lam_ls = gv.load('pion/mom='+mom+'/lam_ls_ex')
+    lam_ls = gv.load('pion/mom='+mom+'/lam_ls')
     hyb_complex = gv.load('pion/mom='+mom+'/hyb_complex')
 
     re_conf_z = []
@@ -29,6 +33,10 @@ def paper_plot_extra_ro(n=0.1567, mom='10'):#(n=1.15):
         for idx in range(len(hyb_complex[0])):
             re_conf_z[n_conf].append(hyb_complex[n_conf][idx].real)
             im_conf_z[n_conf].append(hyb_complex[n_conf][idx].imag)
+
+
+    print(np.shape(re_conf_z))
+    print(np.shape(lam_ls))
     
     re_ro_conf_z, im_ro_conf_z = rotate(re_conf_z, im_conf_z, lam_ls, back=False)
 
@@ -148,12 +156,12 @@ def paper_plot_discrete_effect(mom, meson='pion', if_rotate=True):
     plt.show()
     return 
 
-def quasi_vs_lc_plot(x_ls, y_ls, quasi_da, lic_da, pz, meson):
+def quasi_vs_lc_plot(x_ls, quasi_da, lic_da, pz, meson):
     fig = plt.figure(figsize=fig_size)
     ax = plt.axes(plt_axes)
     ax.fill_between(x_ls, [(val.mean + val.sdev) for val in quasi_da], [(val.mean - val.sdev) for val in quasi_da], color=color_list[0], alpha=0.5, label='Quasi')
-    ax.fill_between(y_ls, [(val.mean + val.sdev) for val in lic_da], [(val.mean - val.sdev) for val in lic_da], color=color_list[1], alpha=0.7, label='Light-cone')
-    #ax.plot(y_ls, [6*x*(1-x) for x in y_ls], color=color_list[2], label=r'$y=6x(1-x)$')
+    ax.fill_between(x_ls, [(val.mean + val.sdev) for val in lic_da], [(val.mean - val.sdev) for val in lic_da], color=color_list[1], alpha=0.7, label='Light-cone')
+    #ax.plot(x_ls, [6*x*(1-x) for x in x_ls], color=color_list[2], label=r'$y=6x(1-x)$')
     ax.axvline(0.5, color='green', linestyle='--')
     ax.axvline(0, color='k', linestyle='--')
     #ax.axvline(1, color='k', linestyle='--')
@@ -263,7 +271,7 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
     y1 = np.array([(val.mean + val.sdev) for val in large_mom_lic_da]) + np.array(delta_ls)
     y2 = np.array([(val.mean - val.sdev) for val in large_mom_lic_da]) - np.array(delta_ls)
 
-    fig = plt.figure(figsize=fig_size_lc)
+    fig = plt.figure(figsize=fig_size)
     ax = plt.axes(plt_axes)
 
     a1 = gv.gvar(-0.06, 0.03) # sum rule
@@ -271,7 +279,7 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
     a4 = gv.gvar(-0.015, 0.025)
 
 
-    ax.fill_between(x_ls, [sum_rule(meson, x, a1, a2, a4).mean + sum_rule(meson, x, a1, a2, a4).sdev for x in x_ls], [sum_rule(meson, x, a1, a2, a4).mean - sum_rule(meson, x, a1, a2, a4).sdev for x in x_ls], color=color_list[1], label='Sum rule', alpha=0.4)
+    ax.fill_between(x_ls[200:302], [sum_rule(meson, x, a1, a2, a4).mean + sum_rule(meson, x, a1, a2, a4).sdev for x in x_ls][200:302], [sum_rule(meson, x, a1, a2, a4).mean - sum_rule(meson, x, a1, a2, a4).sdev for x in x_ls][200:302], color=color_list[1], label='Sum rule', alpha=0.4)
 
     ax.fill_between(x_ls, y1, y2, color=color_list[0], alpha=0.5)
 
@@ -279,19 +287,19 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
 
     ax.plot(x_ls, [6*x*(1-x) for x in x_ls], color='red', linestyle='dashdot', label='Asymptotic') # only plot between 0 and 1
 
-    ax.fill_between(np.linspace(0, 0.05, 50), np.ones(50)*-1, np.ones(50)*2, color='grey', alpha=0.6)
-    ax.fill_between(np.linspace(0.95, 1, 50), np.ones(50)*-1, np.ones(50)*2, color='grey', alpha=0.6)
+    ax.fill_between(np.linspace(-0.5, 0.05, 500), np.ones(500)*-1, np.ones(500)*2, color='grey', alpha=0.6)
+    ax.fill_between(np.linspace(0.95, 1.5, 500), np.ones(500)*-1, np.ones(500)*2, color='grey', alpha=0.6)
 
     ## grey v band to cover fit region
 
     ax.axvline(0.5, color='green', linestyle='--')
-    #ax.axvline(0, color='k', linestyle='--')
-    #ax.axvline(1, color='k', linestyle='--')
+    ax.axvline(0, color='k', linestyle='--')
+    ax.axvline(1, color='k', linestyle='--')
     ax.axhline(0, color='k', linestyle='--')
     #ax.set_title('DA light-cone Pz to infty', **fs_p)
     ax.set_xlabel(x_label, **fs_p)
     ax.set_ylim([-0.19, 1.7])
-    ax.set_xlim([0, 1])
+    ax.set_xlim([-0.5, 1.5])
     ax.legend(loc='lower center')
     ax.tick_params(direction='in', **ls_p)
     plt.savefig(meson+'/paper/lcda_Pz_to_infty.pdf', transparent=True)

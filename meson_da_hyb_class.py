@@ -440,11 +440,13 @@ class MESON_DA_HYB():
                 hyb_conf_re_ft = []
                 hyb_conf_im_ft = []
 
+
                 ### FT ###
                 ##########
                 for x in self.x_ls:
-                    hyb_conf_re_ft.append(sum_ft(lam_ls_ex, hyb_conf, lambda_delta, x).real)
-                    hyb_conf_im_ft.append(sum_ft(lam_ls_ex, hyb_conf, lambda_delta, x).imag)
+                    ft_res = sum_ft(lam_ls_ex, hyb_conf, lambda_delta, x)
+                    hyb_conf_re_ft.append(ft_res.real)
+                    hyb_conf_im_ft.append(ft_res.imag)
 
                 hyb_complex.append(hyb_conf)
                 hyb_re_ft.append(hyb_conf_re_ft)
