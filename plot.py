@@ -230,15 +230,21 @@ def continuous_limit_pz_mix(meson, mom_ls):
     plt.show()
 
 def lcda_mix_pz_plot(meson, x_ls):
-    mom_n1_lic_da = gv.load(meson+'/mom=6/mom_6_lic_da')
-    mom_n2_lic_da = gv.load(meson+'/mom=8/mom_8_lic_da')
-    mom_n3_lic_da = gv.load(meson+'/mom=10/mom_10_lic_da')
-    mom_n4_lic_da = gv.load(meson+'/mom=12/mom_12_lic_da')
+    mom_n1_lic_da = gv.load(meson+'/mom=6/lc_mom_ls')
+    mom_n2_lic_da = gv.load(meson+'/mom=8/lc_mom_ls')
+    mom_n3_lic_da = gv.load(meson+'/mom=10/lc_mom_ls')
 
-    if meson == 'kaon':
-        mom_n4_lic_da = gv.load(meson+'/mom=12/mom_12_lic_da')
+    mom_n1_lic_da = gv.dataset.avg_data(mom_n1_lic_da, bstrap=True)
+    mom_n2_lic_da = gv.dataset.avg_data(mom_n2_lic_da, bstrap=True)
+    mom_n3_lic_da = gv.dataset.avg_data(mom_n3_lic_da, bstrap=True)
 
-    fig = plt.figure(figsize=fig_size)
+
+    # mom_n4_lic_da = gv.load(meson+'/mom=12/mom_12_lic_da')
+
+    # if meson == 'kaon':
+    #     mom_n4_lic_da = gv.load(meson+'/mom=12/mom_12_lic_da')
+
+    fig = plt.figure(figsize=fig_size_lc)
     ax = plt.axes(plt_axes)
     #if meson == 'kaon':
     #ax.fill_between(x_ls, [(val.mean + val.sdev) for val in mom_n4_lic_da], [(val.mean - val.sdev) for val in mom_n4_lic_da], color=color_list[3], alpha=0.5, label=r'$a \to 0, Pz=2.58GeV$')
@@ -247,10 +253,10 @@ def lcda_mix_pz_plot(meson, x_ls):
     ax.fill_between(x_ls, [(val.mean + val.sdev) for val in mom_n2_lic_da], [(val.mean - val.sdev) for val in mom_n2_lic_da], color=color_list[1], alpha=0.4, label=r'$a \to 0, Pz=1.72GeV$')
     ax.fill_between(x_ls, [(val.mean + val.sdev) for val in mom_n3_lic_da], [(val.mean - val.sdev) for val in mom_n3_lic_da], color=color_list[2], alpha=0.4, label=r'$a \to 0, Pz=2.15GeV$')
     
-    ax.fill_between(np.linspace(0, 0.05, 50), np.ones(50)*-1, np.ones(50)*2, color='grey', alpha=0.6)
-    ax.fill_between(np.linspace(0.95, 1, 50), np.ones(50)*-1, np.ones(50)*2, color='grey', alpha=0.6)
+    ax.fill_between(np.linspace(-0.5, 0.05, 500), np.ones(500)*-1, np.ones(500)*2, color='grey', alpha=0.6)
+    ax.fill_between(np.linspace(0.95, 1.5, 500), np.ones(500)*-1, np.ones(500)*2, color='grey', alpha=0.6)
     #ax.axvline(1, color='k', linestyle='--')
-    #ax.axvline(0, color='k', linestyle='--')
+    ax.axvline(0, color='k', linestyle='--')
     ax.axvline(0.5, color='green', linestyle='--')
     ax.axhline(0, color='k', linestyle='--')
     ax.set_xlabel(x_label, **fs_p)
@@ -268,10 +274,30 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
         delta = abs(large_mom_lic_da[idx].mean - mom_n_lic_da[idx].mean) # system error
         delta_ls.append(delta)
 
+
     y1 = np.array([(val.mean + val.sdev) for val in large_mom_lic_da]) + np.array(delta_ls)
     y2 = np.array([(val.mean - val.sdev) for val in large_mom_lic_da]) - np.array(delta_ls)
 
-    fig = plt.figure(figsize=fig_size)
+
+###
+    add_err_gv = [ gv.gvar( (y1[i]+y2[i])/2, (y1[i]-y2[i])/2 ) for i in range(len(y1)) ]
+
+    gv.dump(add_err_gv, 'lc_with_sys')
+
+    print('>>> large mom limit a2:')
+    a2 = calc_an(x_ls, add_err_gv, 2)
+    print(a2)
+
+    print('>>> large mom limit a2:')
+    a4 = calc_an(x_ls, add_err_gv, 4)
+    print(a4)
+
+    mellin_moment(x_ls, add_err_gv, 2)
+    mellin_moment(x_ls, add_err_gv, 4)
+###
+
+
+    fig = plt.figure(figsize=fig_size_lc)
     ax = plt.axes(plt_axes)
 
     a1 = gv.gvar(-0.06, 0.03) # sum rule
@@ -280,6 +306,19 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
 
 
     ax.fill_between(x_ls[200:302], [sum_rule(meson, x, a1, a2, a4).mean + sum_rule(meson, x, a1, a2, a4).sdev for x in x_ls][200:302], [sum_rule(meson, x, a1, a2, a4).mean - sum_rule(meson, x, a1, a2, a4).sdev for x in x_ls][200:302], color=color_list[1], label='Sum rule', alpha=0.4)
+
+    if meson == 'pion':
+        a2 = gv.gvar(0.101, 0.024)
+        ope = [sum_rule(meson, x, 0, a2, 0) for x in x_ls]
+    elif meson == 'kaon':
+        a1 = gv.gvar(-0.0533, 0.0034)
+        a2 = gv.gvar(0.090, 0.019)
+        ope = [sum_rule(meson, x, a1, a2, 0) for x in x_ls]
+
+    ax.fill_between(x_ls[200:302], [val.mean + val.sdev for val in ope][200:302], [val.mean - val.sdev for val in ope][200:302], color=color_list[2], label='OPE', alpha=0.6)
+
+    if meson == 'pion':
+        ax.plot(x_ls[200:302], DSE(x_ls)[200:302], color='blue', label='DSE', linestyle='dashed')
 
     ax.fill_between(x_ls, y1, y2, color=color_list[0], alpha=0.5)
 
@@ -299,7 +338,7 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
     #ax.set_title('DA light-cone Pz to infty', **fs_p)
     ax.set_xlabel(x_label, **fs_p)
     ax.set_ylim([-0.19, 1.7])
-    ax.set_xlim([-0.5, 1.5])
+    ax.set_xlim([-0.25, 1.25])
     ax.legend(loc='lower center')
     ax.tick_params(direction='in', **ls_p)
     plt.savefig(meson+'/paper/lcda_Pz_to_infty.pdf', transparent=True)

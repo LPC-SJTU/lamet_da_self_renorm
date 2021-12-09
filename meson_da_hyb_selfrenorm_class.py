@@ -406,9 +406,9 @@ class EXTRAPOLATION_FT():
         def fcn(x, p):
             val = {}
             if self.meson == 'pion':
-                val['re'] = ( p['c1']/(x['re']**p['n']) * np.cos(np.pi/2 * p['n']) + p['c2']/(x['re']**p['n']) * np.cos(x['re'] - np.pi/2 * p['n']) ) #e# ###
+                val['re'] = ( p['c1']/(x['re']**p['n']) * np.cos(np.pi/2 * p['n']) + p['c2']/(x['re']**p['n']) * np.cos(x['re'] - np.pi/2 * p['n']) )  #e# ###
 
-                val['im'] = - ( p['c1']/(x['im']**p['n']) * np.sin(np.pi/2 * p['n']) + p['c2']/(x['im']**p['n']) * np.sin(x['im'] - np.pi/2 * p['n']) ) 
+                val['im'] = - ( p['c1']/(x['im']**p['n']) * np.sin(np.pi/2 * p['n']) + p['c2']/(x['im']**p['n']) * np.sin(x['im'] - np.pi/2 * p['n']) )
 
                 if self.mode == 'quasi':
                     val['re'] = val['re'] * np.exp(-x['re'] / 150)
@@ -463,7 +463,11 @@ class EXTRAPOLATION_FT():
             lam_dic = {'re':lam, 'im':lam}
             da_ext.append( complex(fcn(lam_dic, fit_result.p)['re'].mean, fcn(lam_dic, fit_result.p)['im'].mean) )
 
-        return lam_ls_ex, da_ext, fit_result.p['n'].mean
+        if self.meson == 'pion':
+            return lam_ls_ex, da_ext, fit_result.p['n'].mean
+
+        elif self.meson == 'kaon':
+            return lam_ls_ex, da_ext, 0
 
 def large_mom_limit(x_ls, mom_n1_da, mom_n2_da, mom_n3_da, mom_ls):
     large_mom_da = []

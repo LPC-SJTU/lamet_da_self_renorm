@@ -27,7 +27,8 @@ from scipy import integrate
 fig_width = 6.75 # in inches, 2x as wide as APS column
 gr        = 1.618034333 # golden ratio
 fig_size  = (fig_width, fig_width / gr)
-fig_size_lc = (fig_width * 0.8, fig_width * 0.8)
+fig_size_lc = (fig_width * 0.8, fig_width * 0.6)
+fig_size_sq = (fig_width * 0.8, fig_width * 0.8)
 gridspec_sub = {'height_ratios': [3, 1], 'left': 0.12, 'right': 0.99, 'bottom': 0.15, 'top': 0.98}
 plt_axes = [0.1,0.12,0.85,0.8]
 plt_axes_small = [0.12,0.15,0.8,0.75]
@@ -198,40 +199,6 @@ def norm_check(y_ls, lcda):
 
     return np.sum(val)*(y_ls[1]-y_ls[0])
 
-# def large_mom_limit(y_ls, mom_n1_lic_da, mom_n2_lic_da, mom_n3_lic_da, mom_ls, meson):
-#     large_mom_lic_da = []
-
-#     for idx in range(len(y_ls)):
-#         def fcn(x, p):
-#             return p['psi'] + p['c2']/(x**2)
-
-#         priors = gv.BufferDict()
-#         priors['psi'] = gv.gvar(0.5, 2)
-#         priors['c2'] = gv.gvar(1, 10)
-
-#         pz_ls = np.array(mom_ls) * mom_to_pz
-#         lcda_ls = [ mom_n1_lic_da[idx], mom_n2_lic_da[idx], mom_n3_lic_da[idx] ]
-
-#         fit_result = lsf.nonlinear_fit(data=(pz_ls, lcda_ls), prior=priors, fcn=fcn, maxit=10000, svdcut=1e-100, fitter='scipy_least_squares')
-
-#         large_mom_lic_da.append(fit_result.p['psi'])
-
-#     # mom=inf
-#     if meson == 'kaon':
-#         print('mom=inf, a1: ')
-#         a1 = calc_an(y_ls, large_mom_lic_da, 1)
-#         print(a1)
-        
-#     print('mom=inf, a2: ')
-#     a2 = calc_an(y_ls, large_mom_lic_da, 2)
-#     print(a2)
-
-#     print('Light-cone at inf pz integral within [0, 1]: ')
-#     normal = norm_check(y_ls, large_mom_lic_da) 
-#     print(normal)
-
-#     return large_mom_lic_da
-
 def sum_rule(meson, x, a1, a2, a4):
     def C1(x, a):
         return 2*a*x
@@ -248,3 +215,28 @@ def sum_rule(meson, x, a1, a2, a4):
     if meson == 'kaon':
         return 6 * x * (1-x) * ( 1 + C1(2*x-1, 3/2)*a1 + C2(2*x-1, 3/2)*a2 )
 
+def DSE(x):
+    return 18.2 * x * (1-x) * ( 1 - 2.33*np.sqrt(x*(1-x)) + 1.79*x*(1-x) )
+
+def mellin_moment(x_ls, lc_ls, n):
+    x_array = np.array(x_ls)
+    zeta_array = 2 * x_array - 1
+
+    ### normalization check ###
+    val = []
+    for idx in range(len(zeta_array)):
+        if zeta_array[idx] >=-1 and zeta_array[idx] <=1:
+            val.append(lc_ls[idx].mean)
+    print('>>> normalization check:')
+    print( np.sum(val) * (zeta_array[1]-zeta_array[0] ) * 1/2 ) # 1/2 because zeta has twice bigger axis than x
+
+    ### n order moment ###
+    val = []
+    for idx in range(len(zeta_array)):
+        if zeta_array[idx] >=-1 and zeta_array[idx] <=1:
+            val.append( zeta_array[idx]**n * lc_ls[idx] )
+
+    print('>>> mellin moment order '+str(n)+' :')
+    print( np.sum(val) * (zeta_array[1]-zeta_array[0]) * 1/2)
+
+    return

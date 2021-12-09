@@ -93,6 +93,12 @@ def pion_main():
         lc_im_ls = gv.load(meson+'/mom='+str(mom)+'/lc_im_ls')
 
 
+        lambda_ls = z_ls_da * 2*np.pi / (0.0574*96) * 6
+        print('>>> mom = '+str(mom))
+        print( 'For lambda bigger than ' + str(lambda_ls[extend_point['mom='+str(mom)]]) + ', use extrapolation function.' )
+        print( 'Lambda starts from ' + str(lambda_ls[extend_fit_start['mom='+str(mom)]]) + ' are included in the extrapolation fit.' )
+
+
         if False:
             ### extrapolation and FT of LCDA ###
             print('>>> extrapolation and FT of LCDA at mom='+str(mom))
@@ -108,6 +114,7 @@ def pion_main():
         lc_mom_avg = gv.dataset.avg_data(lc_mom_ls, bstrap=True)
 
         lc_mom_mix.append(lc_mom_avg)
+
 
         if False:
             ### extrapolation and FT of quasi ###
@@ -127,8 +134,20 @@ def pion_main():
 
         #quasi_vs_lc_plot(x_ls, quasi_mom_avg, lc_mom_avg, pz, meson)
 
+
     large_mom_da = large_mom_limit(x_ls, lc_mom_mix[0], lc_mom_mix[1], lc_mom_mix[2], mom_ls)
+
+    # print('>>> large mom limit a2:')
+    # a2 = calc_an(x_ls, large_mom_da, 2)
+    # print(a2)
+
+    # print('>>> large mom limit a4:')
+    # a4 = calc_an(x_ls, large_mom_da, 4)
+    # print(a4)
+
+
     lcda_large_pz_plot(meson, x_ls, lc_mom_mix[2], large_mom_da)
+    lcda_mix_pz_plot(meson, x_ls)
     
 
 if __name__ == '__main__':
