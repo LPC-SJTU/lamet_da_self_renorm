@@ -12,16 +12,16 @@ def kaon_main():
     x_ls = np.arange(-2-0.01, 3.02, 0.01) # x after ft, for quasi before matching
 
     extend_point = {}
-    extend_point['mom=6'] = -4
-    extend_point['mom=8'] = -7
-    extend_point['mom=10'] = -10
+    extend_point['mom=6'] = -5#-4
+    extend_point['mom=8'] = -9#-7
+    extend_point['mom=10'] = -12#-10
     extend_point['mom=12'] = -10
 
 
     extend_fit_start = {}
     extend_fit_start['mom=6'] = -11
-    extend_fit_start['mom=8'] = -13
-    extend_fit_start['mom=10'] = -16
+    extend_fit_start['mom=8'] = -14#-13
+    extend_fit_start['mom=10'] = -16#-16
     extend_fit_start['mom=12'] = -16
 
     
@@ -70,12 +70,16 @@ def kaon_main():
             renorm_da_re_ls, renorm_da_im_ls = self_renormalization.main(da_an_ls) # shape = (N(a_str), N_conf, len(z_ls_extend))
 
             ### continuum_limit with rotate ###
-            lam_ls, quasi_re_ls, quasi_im_ls = continuum_limit.main(mom, renorm_da_re_ls, renorm_da_im_ls) # quasi in the coordinate space
+            re_lam_ls, im_lam_ls, lam_ls, quasi_re_ls, quasi_im_ls = continuum_limit.main(mom, renorm_da_re_ls, renorm_da_im_ls) # quasi in the coordinate space
+            gv.dump(re_lam_ls, meson+'/mom='+str(mom)+'/re_lam_ls')
+            gv.dump(im_lam_ls, meson+'/mom='+str(mom)+'/im_lam_ls')
             gv.dump(lam_ls, meson+'/mom='+str(mom)+'/lam_ls')
             gv.dump(quasi_re_ls, meson+'/mom='+str(mom)+'/quasi_re_ls')
             gv.dump(quasi_im_ls, meson+'/mom='+str(mom)+'/quasi_im_ls')
 
 
+        re_lam_ls = gv.load(meson+'/mom='+str(mom)+'/re_lam_ls')
+        im_lam_ls = gv.load(meson+'/mom='+str(mom)+'/im_lam_ls')
         lam_ls = gv.load(meson+'/mom='+str(mom)+'/lam_ls')
         quasi_re_ls = gv.load(meson+'/mom='+str(mom)+'/quasi_re_ls')
         quasi_im_ls = gv.load(meson+'/mom='+str(mom)+'/quasi_im_ls')
@@ -91,6 +95,13 @@ def kaon_main():
 
         lc_re_ls = gv.load(meson+'/mom='+str(mom)+'/lc_re_ls')
         lc_im_ls = gv.load(meson+'/mom='+str(mom)+'/lc_im_ls')
+
+
+        print('>>> mom = '+str(mom))
+        print( 'For lambda bigger than ' + str(lam_ls[extend_point['mom='+str(mom)]]) + ', use extrapolation function.' )
+        print( 'Lambda starts from ' + str(lam_ls[extend_fit_start['mom='+str(mom)]]) + ' are included in the extrapolation fit.' )
+
+        #extrapolation_check(meson+', mom='+str(mom), lam_ls, lc_re_ls, lam_ls[extend_fit_start['mom='+str(mom)]], lam_ls[extend_point['mom='+str(mom)]])
 
 
         if False:
@@ -125,7 +136,7 @@ def kaon_main():
 
         quasi_mom_mix.append(quasi_mom_avg)
 
-        #quasi_vs_lc_plot(x_ls, quasi_mom_avg, lc_mom_avg, pz, meson)
+        quasi_vs_lc_plot(x_ls, quasi_mom_avg, lc_mom_avg, pz, meson)
 
     large_mom_da = large_mom_limit(x_ls, lc_mom_mix[0], lc_mom_mix[1], lc_mom_mix[2], mom_ls)
     lcda_large_pz_plot(meson, x_ls, lc_mom_mix[2], large_mom_da)

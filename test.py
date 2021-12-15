@@ -200,7 +200,7 @@
 
 # %%
 from head import *
-x_ls = np.linspace(-0.5, 1.5, 500)
+x_ls = np.linspace(0, 1, 100)
 y_ls = DSE(x_ls)
 
 a2 = calc_an(x_ls, y_ls, 2)

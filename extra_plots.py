@@ -21,7 +21,8 @@ def hyb_vs_RIMOM_plot():
 
     rmom_z = np.array(rmom_z)
 
-    da_a06_conf_ls = gv.load(meson+'/mom='+str(mom)+'/da_a06_conf_ls')
+    data_ls = gv.load(meson+'/mom='+str(mom)+'/da_an_ls')
+    da_a06_conf_ls = data_ls[0]
 
     def renorm(da_conf_ls, key): 
         da_re_ls = []
@@ -51,9 +52,10 @@ def hyb_vs_RIMOM_plot():
 
 
     ### 
-
-    a06_hyb_re_ls = gv.load(meson+'/mom='+str(mom)+'/a06_hyb_re_ls')
-    a06_hyb_im_ls = gv.load(meson+'/mom='+str(mom)+'/a06_hyb_im_ls')
+    re_lam_ls = gv.load(meson+'/mom='+str(mom)+'/re_lam_ls')
+    im_lam_ls = gv.load(meson+'/mom='+str(mom)+'/im_lam_ls')
+    a06_hyb_re_ls = re_lam_ls[0]
+    a06_hyb_im_ls = im_lam_ls[0]
 
     pz = int(mom) * 0.215
     lam_ls = z_ls_da * ( 2*np.pi / (0.0574*96) * mom * gev_fm ) / gev_fm
@@ -64,15 +66,17 @@ def hyb_vs_RIMOM_plot():
 
 
     fig = plt.figure(figsize=fig_size)
-    ax = plt.axes(plt_axes)
+    ax = plt.axes(plt_axes_small)
     ax.errorbar(lam_ls, [val.mean for val in a06_ro_avg], [val.sdev for val in a06_ro_avg], color='blue', label='Hyrbid on self_R', fmt='o', **errorb)
     ax.errorbar(lam_ls, [val.mean for val in rmom_a06_lambda_avg], [val.sdev for val in rmom_a06_lambda_avg], color='red', label='Hybrid on RI/MOM', fmt='D', **errorb)
     ax.axhline(0, color='k', linestyle='--')
-    ax.legend(loc='upper right')
-    ax.set_xlabel(z_label, **fs_p)
-    ax.set_ylim([-0.5, 1.25])
-    ax.tick_params(direction='in', **ls_p)
-    ax.set_title(hyb_ro_re_label, **fs_p)
+    ax.legend(loc='upper right', **fs_p)
+    ax.set_xlabel(z_label, **fs_p_l)
+    ax.set_ylim([-0.49, 1.249])
+    ax.tick_params(direction='in', **ls_p_l)
+    ax.set_title(hyb_ro_re_label, **fs_p_l)
+    ax.grid(linestyle=':')
+
     plt.savefig(meson+'/paper/renorm_comparison_mom_10_a06.pdf', transparent=True)
     plt.show()
 
@@ -214,6 +218,6 @@ def mu_compare():
     plt.show()
 
 # %%
-mu_compare()
+hyb_vs_RIMOM_plot()
 
 # %%

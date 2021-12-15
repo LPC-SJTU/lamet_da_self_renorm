@@ -183,7 +183,7 @@ class CONTINUUM_LIMIT():
         else:
             quasi_re_ls, quasi_im_ls = cont_re_ls, cont_im_ls
 
-        return self.lambda_ls, quasi_re_ls, quasi_im_ls
+        return re_lam_ls, im_lam_ls, self.lambda_ls, quasi_re_ls, quasi_im_ls
 
         
     def paras(self, a_str):
@@ -340,9 +340,9 @@ class EXTRAPOLATION_FT():
         
     def main(self, lam_ls, extend_fit_start, extend_point, da_re_ls, da_im_ls, mode):
         self.lam_ls = lam_ls # different for different pz
-        self.extend_fit_start = extend_fit_start
+        self.extend_fit_start = extend_fit_start # include
         self.extend_point = extend_point
-        self.lam_max = self.lam_ls[extend_point] # when lambda bigger than this max, use the extend function
+        self.lam_max = self.lam_ls[extend_point] # when lambda bigger (not include) than this max, use the extend function
         self.da_re_ls = da_re_ls
         self.da_im_ls = da_im_ls
         self.mode = mode # 'quasi' or 'lcda'

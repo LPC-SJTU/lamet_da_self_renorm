@@ -36,7 +36,9 @@ errorp = {"markersize": 5, "mfc": "none", "linestyle": "none"} # circle
 errorb = {"markersize": 5, "mfc": "none", "linestyle": "none", "capsize": 3, "elinewidth": 1} # circle
 errorl = {"markersize": 5, "mfc": "none", "capsize": 3, "elinewidth": 1} # circle with line
 fs_p = {"fontsize": 13} # font size of text, label, ticks
+fs_p_l = {"fontsize": 19} 
 ls_p = {"labelsize": 13}
+ls_p_l = {"labelsize": 15.5}
 
 gev_fm = 0.1973269631 # 1 = 0.197 GeV . fm #
 delta_sys = 0 # 0.002, used to add sys error for pdf data after interpolation
@@ -75,8 +77,26 @@ fit_y3 = 0.8 # [y2, y3] keeps originally
 fit_y4 = 0.95
 
 
+
+grey = "#808080" 
+red = "#FF6F6F" 
+peach = "#FF9E6F" 
+orange = "#FFBC6F" 
+sunkist = "#FFDF6F"
+yellow = "#FFEE6F"
+lime = "#CBF169"
+green = "#5CD25C" 
+turquoise = "#4AAB89"
+blue = "#508EAD" 
+grape = "#635BB1"
+violet = "#7C5AB8" 
+fuschia = "#C3559F"
+
+#color_list = [orange, blue, violet, red, turquoise, lime, peach, sunkist, green, grey, grape]
 color_list = ['orange','dodgerblue','blueviolet','deeppink','indigo','rosybrown','greenyellow','cyan','fuchsia','royalblue', 'red','green','orange','dodgerblue','blueviolet','deeppink','indigo','rosybrown','greenyellow','cyan','fuchsia','royalblue', 'red','green']
-fmt_ls = ['o', 'D', 's', '^']
+fmt_ls = ['o', 'D', 's', '^', 'x', '.']
+
+
 
 # labels
 lambda_label = r"$\lambda = z P_z$"
@@ -86,8 +106,8 @@ t_label = r"$t$"
 meff_local_label = r"$\ln(C(z=0, t) / C(z=0, t+1))$"
 meff_non_local_label = r"$\ln(C(z, t) / C(z, t+1))$"
 ratio_label = r"$C(z, t) / C(z=0, t)$"
-hyb_ro_re_label = r'$Re[e^{\frac{i z P_z}{2}} H_{\pi}(z)]$'
-hyb_ro_im_label = r'$Im[e^{\frac{i z P_z}{2}} H_{\pi}(z)]$'
+hyb_ro_re_label = r'Re$[e^{\frac{i z P_z}{2}} H_{\pi}(z)]$'
+hyb_ro_im_label = r'Im$[e^{\frac{i z P_z}{2}} H_{\pi}(z)]$'
 hyb_re_label = r'$Re[H_{\pi}(z)]$'
 hyb_im_label = r'$Im[H_{\pi}(z)]$'
 
@@ -218,6 +238,27 @@ def sum_rule(meson, x, a1, a2, a4):
 def DSE(x):
     return 18.2 * x * (1-x) * ( 1 - 2.33*np.sqrt(x*(1-x)) + 1.79*x*(1-x) )
 
+def DSE_kaon():
+    pix_x = [22,66,163,235,307,402,429,547,669,829,906,960,1033,982,1112,1185,1266,1306,1373,1417,1454,1486,1509,1525]
+    pix_y = [75,204,433,557,658,751,770,840,880,906,907,905,891,904,864,821,745,692,571,469,364,249,161,80]
+
+    x1 = 1537 # coor of x=1
+    y1 = 685 # coor of y=1 
+
+    x = []
+    y = []
+
+    for val in pix_x:
+        x.append( (x1-val)/x1 )
+    
+    for val in pix_y:
+        y.append( val/y1 )
+
+    x = np.array(x)
+    y = np.array(y)
+
+    return x, y
+
 def mellin_moment(x_ls, lc_ls, n):
     x_array = np.array(x_ls)
     zeta_array = 2 * x_array - 1
@@ -240,3 +281,4 @@ def mellin_moment(x_ls, lc_ls, n):
     print( np.sum(val) * (zeta_array[1]-zeta_array[0]) * 1/2)
 
     return
+
