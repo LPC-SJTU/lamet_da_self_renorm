@@ -469,7 +469,7 @@ class EXTRAPOLATION_FT():
         elif self.meson == 'kaon':
             return lam_ls_ex, da_ext, 0
 
-def large_mom_limit(x_ls, mom_n1_da, mom_n2_da, mom_n3_da, mom_ls):
+def large_mom_limit(x_ls, mom_da_ls, mom_ls):
     large_mom_da = []
     for idx in range(len(x_ls)):
         def fcn(x, p):
@@ -480,7 +480,7 @@ def large_mom_limit(x_ls, mom_n1_da, mom_n2_da, mom_n3_da, mom_ls):
         priors['c2'] = gv.gvar(1, 10)
 
         pz_ls = np.array(mom_ls) * mom_to_pz
-        lcda_ls = [ mom_n1_da[idx], mom_n2_da[idx], mom_n3_da[idx] ]
+        lcda_ls = [ mom_da[idx] for mom_da in mom_da_ls]
 
         fit_result = lsf.nonlinear_fit(data=(pz_ls, lcda_ls), prior=priors, fcn=fcn, maxit=10000, svdcut=1e-100, fitter='scipy_least_squares')
 

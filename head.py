@@ -71,10 +71,10 @@ extend_length_quasi = 200 # how long for extension before FT, 200 about till lam
 extend_length_lc = 1000 # how long for extension before FT, 200 about till lambda=120
 
 ## lcda endpoints fit
-fit_y1 = 0.05 # [0, y1] and [y4, 1] use fit 
-fit_y2 = 0.2 # [y1, y2] and [y3, y4] are fit region
-fit_y3 = 0.8 # [y2, y3] keeps originally
-fit_y4 = 0.95
+fit_x1 = 0.1 # [0, x1] and [x4, 1] use fit 
+fit_x2 = 0.2 # [x1, x2] and [x3, x4] are fit region
+fit_x3 = 0.8 # [x2, x3] keeps originally
+fit_x4 = 0.9
 
 
 
@@ -282,3 +282,52 @@ def mellin_moment(x_ls, lc_ls, n):
 
     return
 
+def endpoint_ext(x_ls, lc, meson): # dtype of lc should be gvar
+    x_1 = []
+    x_2 = []
+    x_3 = []
+
+    lc_1 = []
+    lc_2 = []
+    lc_3 = []
+
+    for idx in range(len(x_ls)):
+        x = x_ls[idx]
+        y = lc[idx]
+        if 0 <= x <= fit_x1 or fit_x4 <= x <= 1: # use fit
+            x_1.append(x)
+        elif fit_x1 <= x <= fit_x2 or fit_x3 <= x <= fit_x4: # fit region
+            x_2.append(x)
+            lc_2.append(y)
+        elif fit_x2 <= x <= fit_x3: # keep same 
+            x_3.append(x)
+            lc_3.append(y.mean)
+
+    if meson == 'pion':
+        def fcn(x, p):
+            return p['c'] * ( x**p['n'] ) * ( (1-x)**p['n'] )
+
+    elif meson == 'kaon':
+        def fcn(x, p):
+            return p['c'] * ( x**p['n1'] ) * ( (1-x)**p['n2'] )
+
+    priors = gv.BufferDict()
+    priors['c'] = gv.gvar(0, 10)
+    priors['n'] = gv.gvar(0, 10)
+    priors['n1'] = gv.gvar(0, 10)
+    priors['n2'] = gv.gvar(0, 10)
+
+    fit_result = lsf.nonlinear_fit(data=(np.array(x_2), lc_2), prior=priors, fcn=fcn, maxit=10000, svdcut=1e-100, fitter='scipy_least_squares')
+
+    x_ls_new = np.hstack( (np.array(x_1), np.array(x_2), np.array(x_3)) )
+    lc_1 = [val.mean for val in fcn(np.array(x_1), fit_result.p)]
+    lc_2 = [val.mean for val in lc_2]
+    lc_new = np.hstack( (lc_1, lc_2, lc_3) )
+
+    z = zip(x_ls_new, lc_new)
+    z = sorted(z)
+    x_ls_new, lc_new = zip(*z)
+
+    x_ls_new = np.array(x_ls_new)
+
+    return x_ls_new, lc_new

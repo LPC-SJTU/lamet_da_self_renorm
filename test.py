@@ -206,3 +206,34 @@ y_ls = DSE(x_ls)
 a2 = calc_an(x_ls, y_ls, 2)
 print(a2)
 # %%
+import numpy as np
+
+t_dic = {}
+t_dic['mom=6'] = {} 
+t_dic['mom=6']['a06'] = [12, 13, 14] # 1 means t=1
+t_dic['mom=6']['a09'] = [8, 9, 10]
+t_dic['mom=6']['a12'] = [6, 7, 8]
+t_dic['mom=8'] = {}
+t_dic['mom=8']['a06'] = [8, 9, 10]
+t_dic['mom=8']['a09'] = [6, 7, 8]
+t_dic['mom=8']['a12'] = [4, 5, 6]
+t_dic['mom=10'] = {}
+t_dic['mom=10']['a06'] = [7, 8, 9]
+t_dic['mom=10']['a09'] = [5, 6, 7]
+t_dic['mom=10']['a12'] = [3, 4, 5]
+t_dic['mom=12'] = {}
+t_dic['mom=12']['a06'] = [7, 8, 9]
+t_dic['mom=12']['a09'] = [5, 6, 7]
+t_dic['mom=12']['a12'] = [3, 4, 5]
+
+
+for key in t_dic:
+    print(key+', a06:')
+    print( 't=' + str(np.array(t_dic[key]['a06']) * 0.06) )
+
+    print(key+', a09:')
+    print( 't=' + str(np.array(t_dic[key]['a09']) * 0.09) )
+
+    print(key+', a12:')
+    print( 't=' + str(np.array(t_dic[key]['a12']) * 0.12) )
+# %%

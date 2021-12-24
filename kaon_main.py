@@ -10,6 +10,7 @@ def kaon_main():
     zR_dic, m_pdf_dic = pdf_zR()
 
     x_ls = np.arange(-2-0.01, 3.02, 0.01) # x after ft, for quasi before matching
+    y_ls = x_ls
 
     extend_point = {}
     extend_point['mom=6'] = -5#-4
@@ -50,7 +51,7 @@ def kaon_main():
     extrapolation_ft = EXTRAPOLATION_FT(meson, x_ls)
     
 
-    mom_ls = [6,8,10]
+    mom_ls = [8,10]
     lc_mom_mix = []
     quasi_mom_mix = []
     for mom in mom_ls:
@@ -118,6 +119,24 @@ def kaon_main():
 
         lc_mom_avg = gv.dataset.avg_data(lc_mom_ls, bstrap=True)
 
+
+
+
+
+        ### extrapolation at the endpoints ###
+        lc_mom_gv = [add_sdev(lc, lc_mom_avg) for lc in lc_mom_ls]
+
+        lc_mom_ls = []
+        print('>>> fitting the lc endpoints of '+meson)
+        for n_conf in tqdm(range(len(lc_mom_gv))):
+            y_ls, lc_new = endpoint_ext(x_ls, lc_mom_gv[n_conf], meson)
+            lc_mom_ls.append(lc_new)
+        lc_mom_avg = gv.dataset.avg_data(lc_mom_ls, bstrap=True)
+
+
+
+
+
         lc_mom_mix.append(lc_mom_avg)
 
         if False:
@@ -136,11 +155,11 @@ def kaon_main():
 
         quasi_mom_mix.append(quasi_mom_avg)
 
-        quasi_vs_lc_plot(x_ls, quasi_mom_avg, lc_mom_avg, pz, meson)
+        # quasi_vs_lc_plot(x_ls, y_ls, quasi_mom_avg, lc_mom_avg, pz, meson)
 
-    large_mom_da = large_mom_limit(x_ls, lc_mom_mix[0], lc_mom_mix[1], lc_mom_mix[2], mom_ls)
-    lcda_large_pz_plot(meson, x_ls, lc_mom_mix[2], large_mom_da)
-    lcda_mix_pz_plot(meson, x_ls)
+    large_mom_da = large_mom_limit(y_ls, lc_mom_mix, mom_ls)
+    lcda_large_pz_plot(meson, y_ls, lc_mom_mix[-1], large_mom_da)
+    #lcda_mix_pz_plot(meson, y_ls)
     
 
 if __name__ == '__main__':
