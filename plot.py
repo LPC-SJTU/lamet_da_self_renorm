@@ -142,10 +142,11 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
 
     # mellin_moment(x_ls, add_err_gv, 2)
     # mellin_moment(x_ls, add_err_gv, 4)
+
     ###
 
 
-    fig = plt.figure(figsize=fig_size_sq)
+    fig = plt.figure(figsize=fig_size_lc)
     ax = plt.axes(plt_axes_small)
 
     a1 = gv.gvar(-0.06, 0.03) # sum rule
@@ -153,7 +154,7 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
     a4 = gv.gvar(-0.015, 0.025)
 
 
-    ax.fill_between(x_ls[:], [sum_rule(meson, x, a1, a2, a4).mean + sum_rule(meson, x, a1, a2, a4).sdev for x in x_ls][:], [sum_rule(meson, x, a1, a2, a4).mean - sum_rule(meson, x, a1, a2, a4).sdev for x in x_ls][:], color=color_list[1], label='Sum rule', alpha=0.4)
+    ax.fill_between(x_ls[201:302], [sum_rule(meson, x, a1, a2, a4).mean + sum_rule(meson, x, a1, a2, a4).sdev for x in x_ls][201:302], [sum_rule(meson, x, a1, a2, a4).mean - sum_rule(meson, x, a1, a2, a4).sdev for x in x_ls][201:302], color=color_list[1], label='Sum rule', alpha=0.4)
 
     if meson == 'pion':
         a2 = gv.gvar(0.101, 0.024)
@@ -163,10 +164,10 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
         a2 = gv.gvar(0.090, 0.019)
         ope = [sum_rule(meson, x, a1, a2, 0) for x in x_ls]
 
-    ax.fill_between(x_ls[:], [val.mean + val.sdev for val in ope][:], [val.mean - val.sdev for val in ope][:], color=color_list[2], label='OPE', alpha=0.6)
+    ax.fill_between(x_ls[201:302], [val.mean + val.sdev for val in ope][201:302], [val.mean - val.sdev for val in ope][201:302], color=color_list[2], label='OPE', alpha=0.6)
 
     if meson == 'pion':
-        ax.plot(x_ls[:], DSE(x_ls)[:], color='blue', label='DSE', linestyle='dashed')
+        ax.plot(x_ls[201:302], DSE(x_ls)[201:302], color='blue', label='DSE', linestyle='dashed')
 
     elif meson == 'kaon':
         dse_x, dse_y = DSE_kaon()
@@ -176,9 +177,19 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
 
     ax.fill_between(x_ls, y1, y2, color=color_list[0], alpha=0.5)
 
+    # gv.dump(x_ls, 'temp/k_fit_x')
+    # gv.dump(y1, 'temp/k_fit_y1')
+    # gv.dump(y2, 'temp/k_fit_y2')
+
+    fit_x_ls = gv.load('temp/k_fit_x')
+    fit_y1 = gv.load('temp/k_fit_y1')
+    fit_y2 = gv.load('temp/k_fit_y2')
+
+    ax.fill_between(fit_x_ls, fit_y1, fit_y2, color='green', alpha=0.3)
+
     ax.plot(x_ls, (y1+y2)/2, color=color_list[0], label='This work', linewidth=2, linestyle='dotted')
 
-    ax.plot(x_ls, [6*x*(1-x) for x in x_ls], color='red', linestyle='dashdot', label='Asymptotic') # only plot between 0 and 1
+    ax.plot(x_ls[201:302], [6*x*(1-x) for x in x_ls][201:302], color='red', linestyle='dashdot', label='Asymptotic') # only plot between 0 and 1
 
     ax.fill_between(np.linspace(-0.5, 0.1, 500), np.ones(500)*-1, np.ones(500)*2, color='grey', alpha=0.2)
     ax.fill_between(np.linspace(0.9, 1.5, 500), np.ones(500)*-1, np.ones(500)*2, color='grey', alpha=0.2)
@@ -186,13 +197,13 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
     ## grey v band to cover fit region
 
     ax.axvline(0.5, color='green', linestyle='--')
-    #ax.axvline(0, color='k', linestyle='--')
-    #ax.axvline(1, color='k', linestyle='--')
+    ax.axvline(0, color='k', linestyle='--')
+    ax.axvline(1, color='k', linestyle='--')
     ax.axhline(0, color='k', linestyle='--')
     #ax.set_title('DA light-cone Pz to infty', **fs_p)
     ax.set_xlabel(x_label, **fs_p_l)
     ax.set_ylim([-0.19, 1.7])
-    ax.set_xlim([0, 1])
+    ax.set_xlim([-0.5, 1.5])
     ax.legend(loc='lower center')
     ax.tick_params(direction='in', **ls_p_l)
     plt.savefig(meson+'/paper/lcda_Pz_to_infty.pdf', transparent=True)

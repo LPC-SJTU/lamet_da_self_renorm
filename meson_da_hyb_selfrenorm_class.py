@@ -476,7 +476,7 @@ def large_mom_limit(x_ls, mom_da_ls, mom_ls):
             return p['psi'] + p['c2']/(x**2)
 
         priors = gv.BufferDict()
-        priors['psi'] = gv.gvar(1, 5)
+        priors['psi'] = gv.gvar(1, 10)
         priors['c2'] = gv.gvar(1, 10)
 
         pz_ls = np.array(mom_ls) * mom_to_pz
