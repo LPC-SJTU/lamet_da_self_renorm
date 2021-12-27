@@ -181,9 +181,9 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
     # gv.dump(y1, 'temp/k_fit_y1')
     # gv.dump(y2, 'temp/k_fit_y2')
 
-    fit_x_ls = gv.load('temp/k_fit_x')
-    fit_y1 = gv.load('temp/k_fit_y1')
-    fit_y2 = gv.load('temp/k_fit_y2')
+    fit_x_ls = gv.load('temp/fit_x')
+    fit_y1 = gv.load('temp/fit_y1')
+    fit_y2 = gv.load('temp/fit_y2')
 
     ax.fill_between(fit_x_ls, fit_y1, fit_y2, color='green', alpha=0.3)
 
@@ -203,7 +203,7 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
     #ax.set_title('DA light-cone Pz to infty', **fs_p)
     ax.set_xlabel(x_label, **fs_p_l)
     ax.set_ylim([-0.19, 1.7])
-    ax.set_xlim([-0.5, 1.5])
+    ax.set_xlim([-0.25, 1.25])
     ax.legend(loc='lower center')
     ax.tick_params(direction='in', **ls_p_l)
     plt.savefig(meson+'/paper/lcda_Pz_to_infty.pdf', transparent=True)
