@@ -100,8 +100,8 @@ def lcda_mix_pz_plot(meson, x_ls):
     ax.fill_between(x_ls, [(val.mean + val.sdev) for val in mom_n2_lic_da], [(val.mean - val.sdev) for val in mom_n2_lic_da], color=color_list[1], alpha=0.4, label=r'$a \to 0, Pz=1.72GeV$')
     ax.fill_between(x_ls, [(val.mean + val.sdev) for val in mom_n3_lic_da], [(val.mean - val.sdev) for val in mom_n3_lic_da], color=color_list[2], alpha=0.4, label=r'$a \to 0, Pz=2.15GeV$')
     
-    ax.fill_between(np.linspace(-0.5, 0.05, 500), np.ones(500)*-1, np.ones(500)*2, color='grey', alpha=0.4)
-    ax.fill_between(np.linspace(0.95, 1.5, 500), np.ones(500)*-1, np.ones(500)*2, color='grey', alpha=0.4)
+    ax.fill_between(np.linspace(-0.5, 0.1, 500), np.ones(500)*-1, np.ones(500)*2, color='grey', alpha=0.4)
+    ax.fill_between(np.linspace(0.9, 1.5, 500), np.ones(500)*-1, np.ones(500)*2, color='grey', alpha=0.4)
     #ax.axvline(1, color='k', linestyle='--')
     ax.axvline(0, color='k', linestyle='--')
     ax.axvline(0.5, color='green', linestyle='--')
@@ -116,6 +116,7 @@ def lcda_mix_pz_plot(meson, x_ls):
     return 
 
 def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
+    ### replace all [:] with [201:302] for plot with tails ###
     delta_ls = []
     for idx in range(len(x_ls)):
         delta = abs(large_mom_lic_da[idx].mean - mom_n_lic_da[idx].mean) # system error
@@ -185,7 +186,7 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
     fit_y1 = gv.load('temp/fit_y1')
     fit_y2 = gv.load('temp/fit_y2')
 
-    ax.fill_between(fit_x_ls, fit_y1, fit_y2, color='green', alpha=0.3)
+    # ax.fill_between(fit_x_ls, fit_y1, fit_y2, color='green', alpha=0.3) # endpoints fit
 
     ax.plot(x_ls, (y1+y2)/2, color=color_list[0], label='This work', linewidth=2, linestyle='dotted')
 

@@ -1,5 +1,4 @@
 # %%
-from numpy import add
 from head import *
 from meson_da_hyb_selfrenorm_class import *
 from pdf_self_renorm import pdf_zR
@@ -121,15 +120,16 @@ def pion_main():
 
 
 
-        # ### extrapolation at the endpoints ###
-        # lc_mom_gv = [add_sdev(lc, lc_mom_avg) for lc in lc_mom_ls]
 
-        # lc_mom_ls = []
-        # print('>>> fitting the lc endpoints of '+meson)
-        # for n_conf in tqdm(range(len(lc_mom_gv))):
-        #     y_ls, lc_new = endpoint_ext(x_ls, lc_mom_gv[n_conf], meson)
-        #     lc_mom_ls.append(lc_new)
-        # lc_mom_avg = gv.dataset.avg_data(lc_mom_ls, bstrap=True)
+        ### extrapolation at the endpoints ###
+        lc_mom_gv = [add_sdev(lc, lc_mom_avg) for lc in lc_mom_ls]
+
+        lc_mom_ls = []
+        print('>>> fitting the lc endpoints of '+meson)
+        for n_conf in tqdm(range(len(lc_mom_gv))):
+            y_ls, lc_new = endpoint_ext(x_ls, lc_mom_gv[n_conf], meson)
+            lc_mom_ls.append(lc_new)
+        lc_mom_avg = gv.dataset.avg_data(lc_mom_ls, bstrap=True)
 
         
 
@@ -153,8 +153,7 @@ def pion_main():
 
         quasi_mom_mix.append(quasi_mom_avg)
 
-        #quasi_vs_lc_plot(x_ls, y_ls, quasi_mom_avg, lc_mom_avg, pz, meson)
-
+        # quasi_vs_lc_plot(x_ls, y_ls, quasi_mom_avg, lc_mom_avg, pz, meson)
 
     large_mom_da = large_mom_limit(y_ls, lc_mom_mix, mom_ls)
 
@@ -170,7 +169,7 @@ def pion_main():
     mellin_moment(y_ls, large_mom_da, 4)
 
     lcda_large_pz_plot(meson, y_ls, lc_mom_mix[-1], large_mom_da)
-    #lcda_mix_pz_plot(meson, y_ls)
+    # lcda_mix_pz_plot(meson, y_ls)
     
 
 if __name__ == '__main__':

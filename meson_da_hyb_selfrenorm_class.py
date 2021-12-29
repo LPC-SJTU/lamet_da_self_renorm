@@ -469,6 +469,91 @@ class EXTRAPOLATION_FT():
         elif self.meson == 'kaon':
             return lam_ls_ex, da_ext, 0
 
+class INV_MATCHING_MOM():
+    def __init__(self, x_ls, x_ls_mat, y_ls_mat):
+        self.x_ls = x_ls # for original quasi
+        self.x_ls_mat = x_ls_mat # for quasi in matching
+        self.y_ls_mat = y_ls_mat # for light-cone in matching
+
+    def main(self, pz, quasi_mom_ls):
+        self.pz = pz
+        kernel = self.matching_kernel()
+
+        lc_mom_ls = []
+        print('>>> matching in the momentum space of mom '+str(self.pz / mom_to_pz))
+        for n_conf in tqdm(range(len(quasi_mom_ls))):
+            quasi = np.array(quasi_mom_ls[n_conf])
+            quasi = interp_1d(self.x_ls, quasi, self.x_ls_mat, method='cubic') # interpolation to match a big matrix
+            dot = np.dot( kernel, quasi ) ###
+            lc = interp_1d(self.y_ls_mat, dot, self.x_ls, method='cubic') # interpolation back to previous x_ls
+            lc_mom_ls.append( lc ) 
+
+        return lc_mom_ls
+
+    def matching_kernel(self):
+        x_ls = self.x_ls_mat # for quasi
+        y_ls = self.y_ls_mat # for light-cone
+
+        def H1(x, y):
+            return (1+x-y)/(y-x)*(1-x)/(1-y)*np.log((y-x)/(1-x)) + (1+y-x)/(y-x)*x/y*np.log((y-x)/(-x))
+        
+        def H2(x, y):
+            return (1+y-x)/(y-x)*x/y*np.log(4*x*(y-x)*self.pz**2/mu_f**2) + (1+x-y)/(y-x)*((1-x)/(1-y)*np.log((y-x)/(1-x))-x/y)
+
+        ### CB_matrix ###
+        #################
+        CB_matrix = np.zeros([len(x_ls), len(y_ls)])
+        for idx1 in range(len(x_ls)):
+            for idx2 in range(len(y_ls)):
+                x = x_ls[idx1]
+                y = y_ls[idx2] #!#
+                if abs(x-y) > 0.0001:
+                    if x < 0 and y > 0 and y < 1:
+                        CB_matrix[idx1][idx2] = H1(x, y)
+                    elif x > 0 and y > x and y < 1:
+                        CB_matrix[idx1][idx2] = H2(x, y)
+                    elif y > 0 and y < x and x < 1:
+                        CB_matrix[idx1][idx2] = H2(1-x, 1-y)
+                    elif y > 0 and y < 1 and x > 1:
+                        CB_matrix[idx1][idx2] = H1(1-x, 1-y)
+
+        CB_matrix = CB_matrix * alphas_cf_div_2pi
+
+        for idx in range(len(x_ls)): # diagnoal input
+            if CB_matrix[idx][idx] != 0:
+                print('CB matrix diagnoal error')
+            CB_matrix[idx][idx] = -np.sum([CB_matrix[i][idx] for i in range(len(x_ls))])
+
+        ### extra term related to the modified hybrid method ###
+        #################################################
+        extra_term = np.zeros([len(x_ls), len(y_ls)])
+        for idx1 in range(len(x_ls)):
+            for idx2 in range(len(y_ls)):
+                x = x_ls[idx1]
+                y = y_ls[idx2]
+                if y > 0 and y < 1 and abs(x-y) > 0.0001:
+                    extra_term[idx1][idx2] = 3/2 * (1 / abs(x-y))
+
+        for idx in range(len(x_ls)): # diagnoal input
+            if extra_term[idx][idx] != 0:
+                print('extra term matrix diagnoal error')
+            extra_term[idx][idx] = -np.sum([extra_term[i][idx] for i in range(len(x_ls))])
+
+        extra_term = extra_term * alphas_cf_div_2pi
+
+        ### delta(x-y) ###
+        ##################
+        identity = np.zeros([len(x_ls), len(y_ls)])
+
+        for idx in range(len(x_ls)):
+            identity[idx][idx] = 1
+
+        C_matrix = (CB_matrix + extra_term) * (x_ls[1]-x_ls[0]) + identity # multiply by da to represent integral
+
+        C_matrix_inverse = np.linalg.inv(C_matrix)
+
+        return C_matrix_inverse
+
 def large_mom_limit(x_ls, mom_da_ls, mom_ls):
     large_mom_da = []
     for idx in range(len(x_ls)):

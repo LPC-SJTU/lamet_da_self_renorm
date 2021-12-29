@@ -28,7 +28,7 @@ def kaon_main():
     
     t_dic = {}
     t_dic['mom=6'] = {}
-    t_dic['mom=6']['a06'] = [12, 13, 14]
+    t_dic['mom=6']['a06'] = [12, 13, 14] # 1 means t=1
     t_dic['mom=6']['a09'] = [8, 9, 10]
     t_dic['mom=6']['a12'] = [6, 7, 8]
     t_dic['mom=8'] = {}
@@ -114,8 +114,8 @@ def kaon_main():
             gv.dump(lc_mom_ls, meson+'/mom='+str(mom)+'/lc_mom_ls')
 
         lam_ls_ex = gv.load(meson+'/mom='+str(mom)+'/lam_ls_ex')
-        lc_ext_ls = gv.load(meson+'/mom='+str(mom)+'/lc_ext_ls')
-        lc_mom_ls = gv.load(meson+'/mom='+str(mom)+'/lc_mom_ls')
+        lc_ext_ls = gv.load(meson+'/mom='+str(mom)+'/lc_ext_ls') # extrapolatd in the coor space
+        lc_mom_ls = gv.load(meson+'/mom='+str(mom)+'/lc_mom_ls') # in the mom space
 
         lc_mom_avg = gv.dataset.avg_data(lc_mom_ls, bstrap=True)
 
@@ -123,15 +123,15 @@ def kaon_main():
 
 
 
-        # ### extrapolation at the endpoints ###
-        # lc_mom_gv = [add_sdev(lc, lc_mom_avg) for lc in lc_mom_ls]
+        ### extrapolation at the endpoints ###
+        lc_mom_gv = [add_sdev(lc, lc_mom_avg) for lc in lc_mom_ls]
 
-        # lc_mom_ls = []
-        # print('>>> fitting the lc endpoints of '+meson)
-        # for n_conf in tqdm(range(len(lc_mom_gv))):
-        #     y_ls, lc_new = endpoint_ext(x_ls, lc_mom_gv[n_conf], meson)
-        #     lc_mom_ls.append(lc_new)
-        # lc_mom_avg = gv.dataset.avg_data(lc_mom_ls, bstrap=True)
+        lc_mom_ls = []
+        print('>>> fitting the lc endpoints of '+meson)
+        for n_conf in tqdm(range(len(lc_mom_gv))):
+            y_ls, lc_new = endpoint_ext(x_ls, lc_mom_gv[n_conf], meson)
+            lc_mom_ls.append(lc_new)
+        lc_mom_avg = gv.dataset.avg_data(lc_mom_ls, bstrap=True)
 
 
 
@@ -159,7 +159,7 @@ def kaon_main():
 
     large_mom_da = large_mom_limit(y_ls, lc_mom_mix, mom_ls)
     lcda_large_pz_plot(meson, y_ls, lc_mom_mix[-1], large_mom_da)
-    #lcda_mix_pz_plot(meson, y_ls)
+    # lcda_mix_pz_plot(meson, y_ls)
     
 
 if __name__ == '__main__':
