@@ -116,7 +116,7 @@ def kaon_main():
         quasi_mom_mix.append(quasi_mom_avg)
 
 
-        if True:
+        if False:
             ### inverse matching ###
             lc_mom_ls = inv_matching_mom.main(pz, quasi_mom_ls)
             gv.dump(lc_mom_ls, meson+'/mom='+str(mom)+'/lc_mom_ls_mom_mat')

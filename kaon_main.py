@@ -13,16 +13,16 @@ def kaon_main():
     y_ls = x_ls
 
     extend_point = {}
-    extend_point['mom=6'] = -5#-4
-    extend_point['mom=8'] = -9#-7
-    extend_point['mom=10'] = -12#-10
+    extend_point['mom=6'] = -5
+    extend_point['mom=8'] = -9
+    extend_point['mom=10'] = -12
     extend_point['mom=12'] = -10
 
 
     extend_fit_start = {}
     extend_fit_start['mom=6'] = -11
-    extend_fit_start['mom=8'] = -14#-13
-    extend_fit_start['mom=10'] = -16#-16
+    extend_fit_start['mom=8'] = -14
+    extend_fit_start['mom=10'] = -16
     extend_fit_start['mom=12'] = -16
 
     

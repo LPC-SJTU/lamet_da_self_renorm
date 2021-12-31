@@ -199,6 +199,7 @@
 # plt.show()
 
 # %%
+from numpy.core.fromnumeric import partition
 from head import *
 x_ls = np.linspace(0, 1, 100)
 y_ls = DSE(x_ls)
@@ -236,4 +237,67 @@ for key in t_dic:
 
     print(key+', a12:')
     print( 't=' + str(np.array(t_dic[key]['a12']) * 0.12) )
+# %%
+from head import *
+
+file_path = 'DA_new.hdf5'
+myfile = h5.File(file_path,'r')
+print([key for key in myfile])
+print(np.shape(myfile['a12m130_pion']))
+# print(np.shape(myfile['a09m130_pion']))
+# print(np.shape(myfile['a06m130_pion']))
+print(np.shape(myfile['a12m130_kaon']))
+# print(np.shape(myfile['a09m130_kaon']))
+# print(np.shape(myfile['a06m130_kaon']))
+
+# %%
+# bs_ls = {}
+
+# meson = 'pion'
+# a_str = 'a06'
+# N_conf = 567
+# bs_ls[meson+a_str] = []
+# for times in range(600):
+#     bs_ls[meson+a_str].append(np.random.randint(N_conf, size=N_conf))
+
+# meson = 'pion'
+# a_str = 'a09'
+# N_conf = 737
+# bs_ls[meson+a_str] = []
+# for times in range(600):
+#     bs_ls[meson+a_str].append(np.random.randint(N_conf, size=N_conf))
+
+# meson = 'pion'
+# a_str = 'a12'
+# N_conf = 829
+# bs_ls[meson+a_str] = []
+# for times in range(600):
+#     bs_ls[meson+a_str].append(np.random.randint(N_conf, size=N_conf))
+
+# meson = 'kaon'
+# a_str = 'a06'
+# N_conf = 567
+# bs_ls[meson+a_str] = []
+# for times in range(600):
+#     bs_ls[meson+a_str].append(np.random.randint(N_conf, size=N_conf))
+
+# meson = 'kaon'
+# a_str = 'a09'
+# N_conf = 737
+# bs_ls[meson+a_str] = []
+# for times in range(600):
+#     bs_ls[meson+a_str].append(np.random.randint(N_conf, size=N_conf))
+
+# meson = 'kaon'
+# a_str = 'a12'
+# N_conf = 932
+# bs_ls[meson+a_str] = []
+# for times in range(600):
+#     bs_ls[meson+a_str].append(np.random.randint(N_conf, size=N_conf))
+
+# print([key for key in bs_ls])
+# print(np.shape(bs_ls[meson+a_str]))
+
+# gv.dump(bs_ls, 'bs_ls')
+
 # %%

@@ -13,16 +13,16 @@ def pion_main():
     y_ls = x_ls
 
     extend_point = {}
-    extend_point['mom=6'] = -5#-4
-    extend_point['mom=8'] = -9#-7
-    extend_point['mom=10'] = -12#-10
+    extend_point['mom=6'] = -5
+    extend_point['mom=8'] = -9
+    extend_point['mom=10'] = -12
     extend_point['mom=12'] = -10
 
 
     extend_fit_start = {}
     extend_fit_start['mom=6'] = -11
-    extend_fit_start['mom=8'] = -14#-13
-    extend_fit_start['mom=10'] = -16#-16
+    extend_fit_start['mom=8'] = -14
+    extend_fit_start['mom=10'] = -16
     extend_fit_start['mom=12'] = -16
 
     
@@ -47,7 +47,7 @@ def pion_main():
     file_path = 'DA_new.hdf5'
     data_pre = DATA_PRE(file_path, meson, const_fit=False)
     self_renormalization = RENORMALIZATION(zR_dic) # zR_dic 
-    continuum_limit = CONTINUUM_LIMIT(['a06', 'a09', 'a12'], rotate=False)
+    continuum_limit = CONTINUUM_LIMIT(['a06', 'a09', 'a12'], rotate=True)
     extrapolation_ft = EXTRAPOLATION_FT(meson, x_ls)
     
 

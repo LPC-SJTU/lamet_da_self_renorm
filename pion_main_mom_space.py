@@ -52,7 +52,7 @@ def pion_main():
     file_path = 'DA_new.hdf5'
     data_pre = DATA_PRE(file_path, meson, const_fit=False)
     self_renormalization = RENORMALIZATION(zR_dic) # zR_dic 
-    continuum_limit = CONTINUUM_LIMIT(['a06', 'a09', 'a12'], rotate=False)
+    continuum_limit = CONTINUUM_LIMIT(['a06', 'a09', 'a12'], rotate=True)
     extrapolation_ft = EXTRAPOLATION_FT(meson, x_ls)
     inv_matching_mom = INV_MATCHING_MOM(x_ls, x_ls_mat, y_ls_mat)
     

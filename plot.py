@@ -86,15 +86,9 @@ def lcda_mix_pz_plot(meson, x_ls):
     mom_n3_lic_da = gv.dataset.avg_data(mom_n3_lic_da, bstrap=True)
 
 
-    # mom_n4_lic_da = gv.load(meson+'/mom=12/mom_12_lic_da')
-
-    # if meson == 'kaon':
-    #     mom_n4_lic_da = gv.load(meson+'/mom=12/mom_12_lic_da')
 
     fig = plt.figure(figsize=fig_size_lc)
     ax = plt.axes(plt_axes_small)
-    #if meson == 'kaon':
-    #ax.fill_between(x_ls, [(val.mean + val.sdev) for val in mom_n4_lic_da], [(val.mean - val.sdev) for val in mom_n4_lic_da], color=color_list[3], alpha=0.5, label=r'$a \to 0, Pz=2.58GeV$')
     
     ax.fill_between(x_ls, [(val.mean + val.sdev) for val in mom_n1_lic_da], [(val.mean - val.sdev) for val in mom_n1_lic_da], color=color_list[0], alpha=0.4, label=r'$a \to 0, Pz=1.29GeV$')
     ax.fill_between(x_ls, [(val.mean + val.sdev) for val in mom_n2_lic_da], [(val.mean - val.sdev) for val in mom_n2_lic_da], color=color_list[1], alpha=0.4, label=r'$a \to 0, Pz=1.72GeV$')
@@ -116,22 +110,72 @@ def lcda_mix_pz_plot(meson, x_ls):
     return 
 
 def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
-    ### replace all [:] with [201:302] for plot with tails ###
-    delta_ls = []
+    ### replace all [:] with [202:301] for plot with tails ###
+
+    ### sys error of large mom limit
+    mom_sys_ls = []
     for idx in range(len(x_ls)):
-        delta = abs(large_mom_lic_da[idx].mean - mom_n_lic_da[idx].mean) # system error
-        delta_ls.append(delta)
+        mom_sys = abs(large_mom_lic_da[idx].mean - mom_n_lic_da[idx].mean) # system error
+        mom_sys_ls.append(mom_sys)
+
+    ##
+    # mom_sys_ls = np.zeros_like(large_mom_lic_da)
 
 
-    y1 = np.array([(val.mean + val.sdev) for val in large_mom_lic_da]) + np.array(delta_ls)
-    y2 = np.array([(val.mean - val.sdev) for val in large_mom_lic_da]) - np.array(delta_ls)
+
+    ### sys error of extrapolation
+    if meson == 'pion':
+        ext_y = gv.load('temp/p_dif_ext_y')
+    elif meson == 'kaon':
+        ext_y = gv.load('temp/k_dif_ext_y')
+
+    ext_sys_ls = []
+    for idx in range(len(x_ls)):
+        ext_sys = abs(large_mom_lic_da[idx].mean - ext_y[idx])
+        ext_sys_ls.append(ext_sys)
+
+    ##
+    # ext_sys_ls = np.zeros_like(large_mom_lic_da)
+    
+    ### sys error of continuum limit
+    if meson == 'pion':
+        con_y = gv.load('temp/p_a06_y')
+    elif meson == 'kaon':
+        con_y = gv.load('temp/k_a06_y')
+
+    con_sys_ls = []
+    for idx in range(len(x_ls)):
+        con_sys = abs(large_mom_lic_da[idx].mean - con_y[idx])
+        con_sys_ls.append(con_sys)
+
+    ##
+    # con_sys_ls = np.zeros_like(large_mom_lic_da)
+
+    ### sys error of mu
+    if meson == 'pion':
+        mu_y = gv.load('temp/p_mu_y')
+    elif meson == 'kaon':
+        mu_y = gv.load('temp/k_mu_y')
+
+    mu_sys_ls = []
+    for idx in range(len(x_ls)):
+        mu_sys = abs(large_mom_lic_da[idx].mean - mu_y[idx])
+        mu_sys_ls.append(mu_sys)
+
+    ##
+    # mu_sys_ls = np.zeros_like(large_mom_lic_da)
+
+
+
+    y1 = np.array([( large_mom_lic_da[id].mean + np.sqrt(large_mom_lic_da[id].sdev**2 + mom_sys_ls[id]**2 + ext_sys_ls[id]**2 + con_sys_ls[id]**2 + mu_sys_ls[id]**2) ) for id in range(len(large_mom_lic_da)) ]) 
+    y2 = np.array([( large_mom_lic_da[id].mean - np.sqrt(large_mom_lic_da[id].sdev**2 + mom_sys_ls[id]**2 + ext_sys_ls[id]**2 + con_sys_ls[id]**2 + mu_sys_ls[id]**2) ) for id in range(len(large_mom_lic_da)) ]) 
 
     x_ls = np.hstack((x_ls, np.array([1])))
     y1 = np.hstack((y1, np.array([0])))
     y2 = np.hstack((y2, np.array([0])))
 
     ###
-    add_err_gv = [ gv.gvar( (y1[i]+y2[i])/2, (y1[i]-y2[i])/2 ) for i in range(len(y1)) ]
+    # add_err_gv = [ gv.gvar( (y1[i]+y2[i])/2, (y1[i]-y2[i])/2 ) for i in range(len(y1)) ]
 
     # print('>>> large mom limit a2:')
     # a2 = calc_an(x_ls, add_err_gv, 2)
@@ -147,7 +191,7 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
     ###
 
 
-    fig = plt.figure(figsize=fig_size_lc)
+    fig = plt.figure(figsize=fig_size_sq)
     ax = plt.axes(plt_axes_small)
 
     a1 = gv.gvar(-0.06, 0.03) # sum rule
@@ -155,7 +199,7 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
     a4 = gv.gvar(-0.015, 0.025)
 
 
-    ax.fill_between(x_ls[201:302], [sum_rule(meson, x, a1, a2, a4).mean + sum_rule(meson, x, a1, a2, a4).sdev for x in x_ls][201:302], [sum_rule(meson, x, a1, a2, a4).mean - sum_rule(meson, x, a1, a2, a4).sdev for x in x_ls][201:302], color=color_list[1], label='Sum rule', alpha=0.4)
+    ax.fill_between(x_ls[:], [sum_rule(meson, x, a1, a2, a4).mean + sum_rule(meson, x, a1, a2, a4).sdev for x in x_ls][:], [sum_rule(meson, x, a1, a2, a4).mean - sum_rule(meson, x, a1, a2, a4).sdev for x in x_ls][:], color=color_list[1], label='Sum rule', alpha=0.4)
 
     if meson == 'pion':
         a2 = gv.gvar(0.101, 0.024)
@@ -165,10 +209,10 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
         a2 = gv.gvar(0.090, 0.019)
         ope = [sum_rule(meson, x, a1, a2, 0) for x in x_ls]
 
-    ax.fill_between(x_ls[201:302], [val.mean + val.sdev for val in ope][201:302], [val.mean - val.sdev for val in ope][201:302], color=color_list[2], label='OPE', alpha=0.6)
+    ax.fill_between(x_ls[:], [val.mean + val.sdev for val in ope][:], [val.mean - val.sdev for val in ope][:], color=color_list[2], label='OPE', alpha=0.6)
 
     if meson == 'pion':
-        ax.plot(x_ls[201:302], DSE(x_ls)[201:302], color='blue', label='DSE', linestyle='dashed')
+        ax.plot(x_ls[:], DSE(x_ls)[:], color='blue', label='DSE', linestyle='dashed')
 
     elif meson == 'kaon':
         dse_x, dse_y = DSE_kaon()
@@ -178,19 +222,19 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
 
     ax.fill_between(x_ls, y1, y2, color=color_list[0], alpha=0.5)
 
-    # gv.dump(x_ls, 'temp/k_fit_x')
-    # gv.dump(y1, 'temp/k_fit_y1')
-    # gv.dump(y2, 'temp/k_fit_y2')
+    # gv.dump(x_ls, 'temp/p_fit_with_all_sys_x')
+    # gv.dump(y1, 'temp/p_fit_with_all_sys_y1')
+    # gv.dump(y2, 'temp/p_fit_with_all_sys_y2')
 
-    fit_x_ls = gv.load('temp/fit_x')
-    fit_y1 = gv.load('temp/fit_y1')
-    fit_y2 = gv.load('temp/fit_y2')
+    # fit_x_ls = gv.load('temp/fit_x')
+    # fit_y1 = gv.load('temp/fit_y1')
+    # fit_y2 = gv.load('temp/fit_y2')
 
     # ax.fill_between(fit_x_ls, fit_y1, fit_y2, color='green', alpha=0.3) # endpoints fit
 
     ax.plot(x_ls, (y1+y2)/2, color=color_list[0], label='This work', linewidth=2, linestyle='dotted')
 
-    ax.plot(x_ls[201:302], [6*x*(1-x) for x in x_ls][201:302], color='red', linestyle='dashdot', label='Asymptotic') # only plot between 0 and 1
+    ax.plot(x_ls[:], [6*x*(1-x) for x in x_ls][:], color='red', linestyle='dashdot', label='Asymptotic') # only plot between 0 and 1
 
     ax.fill_between(np.linspace(-0.5, 0.1, 500), np.ones(500)*-1, np.ones(500)*2, color='grey', alpha=0.2)
     ax.fill_between(np.linspace(0.9, 1.5, 500), np.ones(500)*-1, np.ones(500)*2, color='grey', alpha=0.2)
@@ -198,13 +242,13 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
     ## grey v band to cover fit region
 
     ax.axvline(0.5, color='green', linestyle='--')
-    ax.axvline(0, color='k', linestyle='--')
-    ax.axvline(1, color='k', linestyle='--')
+    #ax.axvline(0, color='k', linestyle='--')
+    #ax.axvline(1, color='k', linestyle='--')
     ax.axhline(0, color='k', linestyle='--')
     #ax.set_title('DA light-cone Pz to infty', **fs_p)
     ax.set_xlabel(x_label, **fs_p_l)
     ax.set_ylim([-0.19, 1.7])
-    ax.set_xlim([-0.25, 1.25])
+    ax.set_xlim([0, 1])
     ax.legend(loc='lower center')
     ax.tick_params(direction='in', **ls_p_l)
     plt.savefig(meson+'/paper/lcda_Pz_to_infty.pdf', transparent=True)
@@ -232,7 +276,7 @@ def extrapolation_check(title, lam_ls, lc_ls, po_1, po_2):
 
     return
 
-def fig_1():
+def ZMSbar_check():
     meson = 'pion'
     mom = 10
 
@@ -442,7 +486,7 @@ def fig_1_2(meson, mom, if_rotate=False):
     plt.show()
     return 
 
-def fig_2(n=0.18, mom='10', lambdaL=8.209736899624895, fit_start=5.473157933083264):
+def extrapolation_point(n=0.16, mom='10', lambdaL=8.209736899624895, fit_start=5.473157933083264):
     meson = 'pion'
 
     # before extrapolation
@@ -497,6 +541,10 @@ def fig_2(n=0.18, mom='10', lambdaL=8.209736899624895, fit_start=5.4731579330832
 
     ax.errorbar(lam_ls_ex[1001+st:1001+st+leng], [val.mean for val in lc_ex_avg[st:st+leng]], [val.sdev for val in lc_ex_avg[st:st+leng]], color=color_list[1], marker='D', label='Polynomial fit', **errorb)
 
+    gv.dump(lam_ls_ex[1001+st:1001+st+leng], 'temp/ext_x')
+    gv.dump([val.mean for val in lc_ex_avg[st:st+leng]], 'temp/ext_y')
+    gv.dump([val.sdev for val in lc_ex_avg[st:st+leng]], 'temp/ext_yerr')
+
     ax.axvline(lambdaL, ymin=0.03, ymax=0.38, color='green', linestyle='--', label=r'$\lambda_L$')
 
     ax.axhline(0, color='k', linestyle='--', lw=0.8)
@@ -506,18 +554,231 @@ def fig_2(n=0.18, mom='10', lambdaL=8.209736899624895, fit_start=5.4731579330832
     ax.tick_params(direction='in', **ls_p_l)
     ax.legend(loc='upper right', **fs_p)
     ax.grid(linestyle=':')
-    plt.savefig('pion/paper/fig2.pdf', transparent=True)
+    plt.savefig('pion/paper/extrap_point.pdf', transparent=True)
     plt.show()
 
     return 
 
+def matching_comparison():
+    p_mom_mat_x = gv.load('temp/p_mom_mat_x')
+    p_mom_mat_y1 = gv.load('temp/p_mom_mat_y1')
+    p_mom_mat_y2 = gv.load('temp/p_mom_mat_y2')
+
+    p_coor_mat_x = gv.load('temp/p_coor_mat_x')
+    p_coor_mat_y1 = gv.load('temp/p_coor_mat_y1')
+    p_coor_mat_y2 = gv.load('temp/p_coor_mat_y2')
+
+    k_mom_mat_x = gv.load('temp/k_mom_mat_x')
+    k_mom_mat_y1 = gv.load('temp/k_mom_mat_y1')
+    k_mom_mat_y2 = gv.load('temp/k_mom_mat_y2')
+
+    k_coor_mat_x = gv.load('temp/k_coor_mat_x')
+    k_coor_mat_y1 = gv.load('temp/k_coor_mat_y1')
+    k_coor_mat_y2 = gv.load('temp/k_coor_mat_y2')
+
+
+
+    fig = plt.figure(figsize=fig_size_lc)
+    ax = plt.axes(plt_axes_small)
+
+    ax.fill_between(p_mom_mat_x, p_mom_mat_y1, p_mom_mat_y2, color=color_list[0], label='Mom matching', alpha=0.5)
+    ax.fill_between(p_coor_mat_x, p_coor_mat_y1, p_coor_mat_y2, color=color_list[1], label='Coor matching', alpha=0.5)
+
+    ax.axvline(0.5, color='green', linestyle='--')
+    ax.axvline(0, color='k', linestyle='--')
+    ax.axvline(1, color='k', linestyle='--')
+    ax.axhline(0, color='k', linestyle='--')
+    #ax.set_title('DA light-cone Pz to infty', **fs_p)
+    ax.set_xlabel(x_label, **fs_p_l)
+    ax.set_ylim([-0.19, 1.5])
+    ax.set_xlim([-0.25, 1.25])
+    ax.legend(loc='lower center')
+    ax.tick_params(direction='in', **ls_p_l)
+    plt.savefig('pion/paper/matching_comparison.pdf', transparent=True)
+    plt.show()
+
+
+    fig = plt.figure(figsize=fig_size_lc)
+    ax = plt.axes(plt_axes_small)
+
+    ax.fill_between(k_mom_mat_x, k_mom_mat_y1, k_mom_mat_y2, color=color_list[0], label='Mom matching', alpha=0.5)
+    ax.fill_between(k_coor_mat_x, k_coor_mat_y1, k_coor_mat_y2, color=color_list[1], label='Coor matching', alpha=0.5)
+
+    ax.axvline(0.5, color='green', linestyle='--')
+    ax.axvline(0, color='k', linestyle='--')
+    ax.axvline(1, color='k', linestyle='--')
+    ax.axhline(0, color='k', linestyle='--')
+    #ax.set_title('DA light-cone Pz to infty', **fs_p)
+    ax.set_xlabel(x_label, **fs_p_l)
+    ax.set_ylim([-0.19, 1.5])
+    ax.set_xlim([-0.25, 1.25])
+    ax.legend(loc='lower center')
+    ax.tick_params(direction='in', **ls_p_l)
+    plt.savefig('kaon/paper/matching_comparison.pdf', transparent=True)
+    plt.show()
+    return
+
+def sys_comparison():
+    p_fit_no_sys_x = gv.load('temp/p_fit_no_sys_x')
+    p_fit_no_sys_y1 = gv.load('temp/p_fit_no_sys_y1')
+    p_fit_no_sys_y2 = gv.load('temp/p_fit_no_sys_y2')
+
+    p_fit_with_sys_x = gv.load('temp/p_fit_with_sys_x')
+    p_fit_with_sys_y1 = gv.load('temp/p_fit_with_sys_y1')
+    p_fit_with_sys_y2 = gv.load('temp/p_fit_with_sys_y2')
+
+    p_fit_with_all_sys_x = gv.load('temp/p_fit_with_all_sys_x')
+    p_fit_with_all_sys_y1 = gv.load('temp/p_fit_with_all_sys_y1')
+    p_fit_with_all_sys_y2 = gv.load('temp/p_fit_with_all_sys_y2')
+
+    k_fit_no_sys_x = gv.load('temp/k_fit_no_sys_x')
+    k_fit_no_sys_y1 = gv.load('temp/k_fit_no_sys_y1')
+    k_fit_no_sys_y2 = gv.load('temp/k_fit_no_sys_y2')
+
+    k_fit_with_sys_x = gv.load('temp/k_fit_with_sys_x')
+    k_fit_with_sys_y1 = gv.load('temp/k_fit_with_sys_y1')
+    k_fit_with_sys_y2 = gv.load('temp/k_fit_with_sys_y2')
+
+    k_fit_with_all_sys_x = gv.load('temp/k_fit_with_all_sys_x')
+    k_fit_with_all_sys_y1 = gv.load('temp/k_fit_with_all_sys_y1')
+    k_fit_with_all_sys_y2 = gv.load('temp/k_fit_with_all_sys_y2')
+
+
+
+    fig = plt.figure(figsize=fig_size_sq)
+    ax = plt.axes(plt_axes_small)
+
+    ax.fill_between(p_fit_with_all_sys_x, p_fit_with_all_sys_y1, p_fit_with_all_sys_y2, color=color_list[0], label='With all sys error', alpha=0.5)
+    ax.fill_between(p_fit_with_sys_x, p_fit_with_sys_y1, p_fit_with_sys_y2, color=color_list[1], label='With mom sys error', alpha=0.5)
+    ax.fill_between(p_fit_no_sys_x, p_fit_no_sys_y1, p_fit_no_sys_y2, color='red', label='Without sys error', alpha=0.5)
+
+    ax.axvline(0.5, color='green', linestyle='--')
+    #ax.axvline(0, color='k', linestyle='--')
+    #ax.axvline(1, color='k', linestyle='--')
+    ax.axhline(0, color='k', linestyle='--')
+    #ax.set_title('DA light-cone Pz to infty', **fs_p)
+    ax.set_xlabel(x_label, **fs_p_l)
+    ax.set_ylim([-0.19, 1.5])
+    ax.set_xlim([0, 1])
+    ax.legend(loc='lower center')
+    ax.tick_params(direction='in', **ls_p_l)
+    plt.savefig('pion/paper/syserr_comparison.pdf', transparent=True)
+    plt.show()
+
+
+    fig = plt.figure(figsize=fig_size_sq)
+    ax = plt.axes(plt_axes_small)
+
+    ax.fill_between(k_fit_with_all_sys_x, k_fit_with_all_sys_y1, k_fit_with_all_sys_y2, color=color_list[0], label='With all sys error', alpha=0.5)
+    ax.fill_between(k_fit_with_sys_x, k_fit_with_sys_y1, k_fit_with_sys_y2, color=color_list[1], label='With mom sys error', alpha=0.5)
+    ax.fill_between(k_fit_no_sys_x, k_fit_no_sys_y1, k_fit_no_sys_y2, color='red', label='Without sys error', alpha=0.5)
+
+    ax.axvline(0.5, color='green', linestyle='--')
+    #ax.axvline(0, color='k', linestyle='--')
+    #ax.axvline(1, color='k', linestyle='--')
+    ax.axhline(0, color='k', linestyle='--')
+    #ax.set_title('DA light-cone Pz to infty', **fs_p)
+    ax.set_xlabel(x_label, **fs_p_l)
+    ax.set_ylim([-0.19, 1.5])
+    ax.set_xlim([0, 1])
+    ax.legend(loc='lower center')
+    ax.tick_params(direction='in', **ls_p_l)
+    plt.savefig('kaon/paper/syserr_comparison.pdf', transparent=True)
+    plt.show()
+    return
+
+    return
+
+def extrapolation_point_add(n=0.18, mom='10', lambdaL_1=10.946315866166527, fit_start=8.209736899624895, lambdaL_2=8.209736899624895):
+    meson = 'pion'
+
+    # before extrapolation
+    lam_ls = gv.load(meson+'/mom='+str(mom)+'/lam_ls')
+    lc_re_ls = gv.load(meson+'/mom='+str(mom)+'/lc_re_ls')
+    lc_im_ls = gv.load(meson+'/mom='+str(mom)+'/lc_im_ls')
+
+    lc_re_ro, lc_im_ro = rotate(lc_re_ls, lc_im_ls, lam_ls, back=False)
+
+    lc_avg = gv.dataset.avg_data(lc_re_ro, bstrap=True)
+
+    # after extrapolation
+    lam_ls_ex = gv.load(meson+'/mom='+str(mom)+'/lam_ls_ex')
+    lc_ext_ls = gv.load(meson+'/mom='+str(mom)+'/lc_ext_ls')
+
+    st = int(fit_start / lam_ls[0]) - 1 # this lambda point is included in the fit
+    leng = 18 # how many fit points are plotted
+
+
+    ## cx^n * (1-x)^n ##
+    x_ls = np.linspace(0, 1, 500)
+    a2_lcda = np.array([(x**n)*((1-x)**n) for x in x_ls])
+    integral = np.sum(a2_lcda) * (x_ls[1] - x_ls[0])
+    a2_lcda = a2_lcda / integral # normalization
+
+    lam_ls_a2 = np.linspace(6, 18, 80)
+    a2_bft = []
+    for lam in lam_ls_a2:
+        val = sum_ft_inv(x_ls, a2_lcda, x_ls[1]-x_ls[0], lam) * np.exp(1j * lam / 2)
+        a2_bft.append(val.real)
+
+    ## fit points ##
+    lc_re_ex_ls = []
+    lc_im_ex_ls = []
+    for n_conf in range(len(lc_ext_ls)):
+        lc_re_ex_ls.append([])
+        lc_im_ex_ls.append([])
+        for idl in range(1001, len(lam_ls_ex)):
+            lc_re_ex_ls[n_conf].append(lc_ext_ls[n_conf][idl].real)
+            lc_im_ex_ls[n_conf].append(lc_ext_ls[n_conf][idl].imag)
+
+    lc_re_ex_ro, lc_im_ex_ro = rotate(lc_re_ex_ls, lc_im_ex_ls, lam_ls_ex[1001:], back=False)
+
+    lc_ex_avg = gv.dataset.avg_data(lc_re_ex_ro, bstrap=True)
+
+    fig = plt.figure(figsize=fig_size)
+    ax = plt.axes(plt_axes_small)
+
+    ax.plot(lam_ls_a2, a2_bft, color=color_list[2], label = r'$cx^n (1-x)^n, n = $'+str(round(n,2)))
+
+    ax.errorbar(lam_ls, [val.mean for val in lc_avg], [val.sdev for val in lc_avg], color='red', marker='o', label='Lattice data, Pz=2.15 GeV', **errorb)
+
+    ax.errorbar(lam_ls_ex[1001+st:1001+st+leng], [val.mean for val in lc_ex_avg[st:st+leng]], [val.sdev for val in lc_ex_avg[st:st+leng]], color=color_list[1], marker='D', label='Polynomial fit 1', **errorb)
+
+    ax.axvline(lambdaL_1, ymin=0.03, ymax=0.38, color=color_list[1], linestyle='--', label=r'$\lambda_L 1$')
+
+    ext_x = gv.load('temp/ext_x')
+    ext_y = gv.load('temp/ext_y')
+    ext_yerr = gv.load('temp/ext_yerr')
+
+    ax.errorbar(ext_x, ext_y, ext_yerr, color='green', marker='D', label='Polynomial fit 2', **errorb)
+
+    ax.axvline(lambdaL_2, ymin=0.03, ymax=0.38, color='green', linestyle='--', label=r'$\lambda_L 2$')
+
+    ax.axhline(0, color='k', linestyle='--', lw=0.8)
+    ax.set_xlabel(lambda_label, **fs_p_l)
+    ax.set_ylim([-0.29, 1.19])
+    #ax.set_title(title)
+    ax.tick_params(direction='in', **ls_p_l)
+    ax.legend(loc='upper right', **fs_p)
+    ax.grid(linestyle=':')
+    plt.savefig('pion/paper/extrap_point_add.pdf', transparent=True)
+    plt.show()
+
+    return 
 
 if __name__ == '__main__':
-    #fig_1()
-    #fig_1_1()
-    #fig_1_2(meson='pion', mom=10, if_rotate=True)
+    # ZMSbar_check()
+    # fig_1_1()
+    # fig_1_2(meson='kaon', mom=10, if_rotate=False)
+    # fig_1_2(meson='kaon', mom=8, if_rotate=False)
+    # fig_1_2(meson='kaon', mom=6, if_rotate=False)
 
-    fig_2()
+    # extrapolation_point()
+    # extrapolation_point_add()
+
+    # matching_comparison()
+
+    sys_comparison()
 
     
 # %%

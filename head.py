@@ -52,13 +52,13 @@ k = 3.320
 d_pdf = -0.08183 #-0.1252 # for pdf
 d_da = 0.19 # 0.1 for a^2 order, 0.19 for a order, from Yushan
 m0_da = gv.gvar(-0.094, 0.024) # from Yushan
-mu = 2 # GeV, for renormalization
+mu = 2 # GeV, for renormalization #!# for sys err
 mu_f = 2 # GeV, for factorization
 
 cf=4/3
 nf=3
 b0=11-2/3*nf
-alphas=2 * np.pi/( b0 * np.log(mu/lms) )
+alphas=2 * np.pi/( b0 * np.log(mu_f/lms) )
 
 mom_to_pz = 0.215 # mom=8 corresponding to pz=1.72, pz=2pi / (0.09*64) * mom=8 * 0.197
 alphas_cf_div_2pi = alphas * cf / (2 * np.pi)
@@ -117,11 +117,24 @@ def interp_1d(x_in, y_in, x_out, method="linear"): # interpolation
 
     return y_out
 
-def bootstrap(conf_ls, N_re):
+# def bootstrap(conf_ls, N_re):
+#     N_conf = len(conf_ls)
+#     conf_re = []
+#     for times in range(N_re):
+#         idx_ls = np.random.randint(N_conf, size=N_conf)
+#         temp = []
+#         for idx in idx_ls:
+#             temp.append(conf_ls[idx])
+#         conf_re.append( np.average(temp, axis=0) )
+
+#     return np.array(conf_re)
+
+def bootstrap(conf_ls, meson, a_str):
     N_conf = len(conf_ls)
     conf_re = []
-    for times in range(N_re):
-        idx_ls = np.random.randint(N_conf, size=N_conf)
+    bs_ls = gv.load('bs_ls')[meson+a_str]
+    for times in range(len(bs_ls)):
+        idx_ls = bs_ls[times]
         temp = []
         for idx in idx_ls:
             temp.append(conf_ls[idx])

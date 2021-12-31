@@ -59,7 +59,7 @@ class DATA_PRE():
 
         an, Nz, N_re, t_ls = self.paras(a_str)
 
-        an_meson_bs = bootstrap(an_meson, N_re) # resample
+        an_meson_bs = bootstrap(an_meson, self.meson, a_str) # resample
         an_meson_bs_avg = gv.dataset.avg_data(an_meson_bs, bstrap=True)
 
         an_meson_norm = [] # conf, z (complex number)
@@ -217,6 +217,7 @@ class CONTINUUM_LIMIT():
                     fit_result = lsf.nonlinear_fit(data=(a_ls, hyb_a), prior=priors, fcn=fcn, maxit=10000, svdcut=1e-100, fitter='scipy_least_squares')
 
                     return fit_result.p['f0'].mean
+                    # return hyb_a[0].mean #!# for continuum limit sys error 
 
                 
                 y_re = [ls[n_conf][idl] for ls in re_gv_lam_ls]
