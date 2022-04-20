@@ -10,6 +10,7 @@ x_ls = gv.load('p_no_sys_err_x')
 y_no_sys = gv.load('p_no_sys_err_y')
 yerr_no_sys = gv.load('p_no_sys_err_yerr') # statistic error 
 
+print(np.shape(x_ls))
 
 ##################################
 ## sys error of large mom limit ##
@@ -20,6 +21,7 @@ for idx in range(len(x_ls)):
     mom_sys = abs(y_no_sys[idx] - mom_y[idx])
     mom_sys_ls.append(mom_sys)
 
+print(np.shape(mom_y))
 
 ################################
 ## sys error of extrapolation ##
@@ -31,6 +33,7 @@ for idx in range(len(x_ls)):
     ext_sys = abs(y_no_sys[idx] - ext_y[idx])
     ext_sys_ls.append(ext_sys)
 
+print(np.shape(ext_y))
 
 ##################################
 ## sys error of continuum limit ##
@@ -42,6 +45,7 @@ for idx in range(len(x_ls)):
     con_sys = abs(y_no_sys[idx] - con_y[idx])
     con_sys_ls.append(con_sys)
 
+print(np.shape(con_y))
 
 #####################
 ## sys error of mu ##
@@ -53,6 +57,7 @@ for idx in range(len(x_ls)):
     mu_sys = abs(y_no_sys[idx] - mu_y[idx])
     mu_sys_ls.append(mu_sys)
 
+print(np.shape(mu_y))
 
 ############################
 ## add sys error together ##
@@ -77,6 +82,8 @@ x_ls = gv.load('k_no_sys_err_x')
 y_no_sys = gv.load('k_no_sys_err_y')
 yerr_no_sys = gv.load('k_no_sys_err_yerr') # statistic error 
 
+print(np.shape(x_ls))
+
 ##################################
 ## sys error of large mom limit ##
 ##################################
@@ -86,6 +93,7 @@ for idx in range(len(x_ls)):
     mom_sys = abs(y_no_sys[idx] - mom_y[idx])
     mom_sys_ls.append(mom_sys)
 
+print(np.shape(mom_y))
 
 ################################
 ## sys error of extrapolation ##
@@ -97,6 +105,7 @@ for idx in range(len(x_ls)):
     ext_sys = abs(y_no_sys[idx] - ext_y[idx])
     ext_sys_ls.append(ext_sys)
 
+print(np.shape(ext_y))
 
 ##################################
 ## sys error of continuum limit ##
@@ -108,6 +117,7 @@ for idx in range(len(x_ls)):
     con_sys = abs(y_no_sys[idx] - con_y[idx])
     con_sys_ls.append(con_sys)
 
+print(np.shape(con_y))
 
 #####################
 ## sys error of mu ##
@@ -118,6 +128,8 @@ mu_sys_ls = []
 for idx in range(len(x_ls)):
     mu_sys = abs(y_no_sys[idx] - mu_y[idx])
     mu_sys_ls.append(mu_sys)
+
+print(np.shape(mu_y))
 
 ############################
 ## add sys error together ##
@@ -132,4 +144,6 @@ y2 = np.hstack((y2, np.array([0])))
 
 plt.fill_between(x_ls, y1, y2, color='red', alpha=0.5)
 plt.show()
+
+
 # %%

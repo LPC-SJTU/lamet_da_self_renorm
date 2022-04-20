@@ -223,6 +223,8 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
 
     ax.fill_between(x_ls, y1, y2, color=color_list[0], alpha=0.5)
 
+    # gv.dump([x_ls, y1, y2], 'final_plot_kaon')
+
     # gv.dump(x_ls, 'temp/p_fit_with_all_sys_x')
     # gv.dump(y1, 'temp/p_fit_with_all_sys_y1')
     # gv.dump(y2, 'temp/p_fit_with_all_sys_y2')
@@ -350,7 +352,7 @@ def ZMSbar_check():
     ax.set_xlim([0, 1.65])
     ax.set_xlabel(z_label, **fs_p)
     ax.set_ylim([-0.49, 1.99])
-    ax.set_title(hyb_ro_re_label, **fs_p)
+    ax.set_title(H_pi_ro_re_label, **fs_p)
     ax.tick_params(direction='in', **ls_p)
     ax.legend(loc='upper right')
     plt.savefig(meson+'/paper/fig1.pdf', transparent=True)
@@ -392,7 +394,7 @@ def fig_1_1():
     ax.set_xlim([0, 1.4])
     ax.set_xlabel(z_label, **fs_p_l)
     ax.set_ylim([-0.49, 1.99])
-    ax.set_title(hyb_ro_re_label, **fs_p_l)
+    ax.set_title(H_pi_ro_re_label, **fs_p_l)
     ax.tick_params(direction='in', **ls_p_l)
     ax.grid(linestyle=':')
     ax.legend(loc=(0.55, 0.48), **fs_p)
@@ -446,13 +448,23 @@ def fig_1_2(meson, mom, if_rotate=False):
     ax.tick_params(direction='in', **ls_p_l)
     ax.grid(linestyle=':')
     if if_rotate == True:
-        ax.set_title(hyb_ro_re_label, **fs_p_l)
+        if meson == 'pion':
+            ax.set_title(H_pi_ro_re_label, **fs_p_l)
+        elif meson == 'kaon':
+            ax.set_title(H_k_ro_re_label, **fs_p_l)
+
         ax.legend(loc='upper right', **fs_p)
         plt.savefig(meson+'/paper/discrete_effect_rotated_Pz='+str(pz)+'GeV.pdf', transparent=True)
+
     elif if_rotate == False:
-        ax.set_title(hyb_re_label, **fs_p_l)
+        if meson == 'pion':
+            ax.set_title(H_pi_re_label, **fs_p_l)
+        elif meson == 'kaon':
+            ax.set_title(H_k_re_label, **fs_p_l)
+    
         ax.legend(loc='upper right', **fs_p)
         plt.savefig(meson+'/paper/discrete_effect_Pz='+str(pz)+'GeV.pdf', transparent=True)
+
     plt.show()
 
     ## imag part
@@ -476,12 +488,22 @@ def fig_1_2(meson, mom, if_rotate=False):
     ax.grid(linestyle=':')
     if if_rotate == True:
         ax.set_ylim([-0.29, 0.29])
-        ax.set_title(hyb_ro_im_label, **fs_p_l)
+
+        if meson == 'pion':
+            ax.set_title(H_pi_ro_im_label, **fs_p_l)
+        elif meson == 'kaon':
+            ax.set_title(H_k_ro_im_label, **fs_p_l)
+
         ax.legend(loc='lower right', ncol=2, **fs_p)
         plt.savefig(meson+'/paper/discrete_effect_rotated_imag_part_Pz='+str(pz)+'GeV.pdf', transparent=True)
     elif if_rotate == False:
         ax.set_ylim([-1.09, 0.49])
-        ax.set_title(hyb_im_label, **fs_p_l)
+        
+        if meson == 'pion':
+            ax.set_title(H_pi_im_label, **fs_p_l)
+        elif meson == 'kaon':
+            ax.set_title(H_k_im_label, **fs_p_l)
+
         ax.legend(loc='lower right', **fs_p)
         plt.savefig(meson+'/paper/discrete_effect_imag_part_Pz='+str(pz)+'GeV.pdf', transparent=True)
     plt.show()
@@ -770,16 +792,20 @@ def extrapolation_point_add(n=0.18, mom='10', lambdaL_1=10.946315866166527, fit_
 if __name__ == '__main__':
     # ZMSbar_check()
     # fig_1_1()
-    # fig_1_2(meson='kaon', mom=10, if_rotate=False)
-    # fig_1_2(meson='kaon', mom=8, if_rotate=False)
-    # fig_1_2(meson='kaon', mom=6, if_rotate=False)
+    fig_1_2(meson='kaon', mom=10, if_rotate=True)
+    fig_1_2(meson='kaon', mom=8, if_rotate=True)
+    fig_1_2(meson='kaon', mom=6, if_rotate=True)
+
+    fig_1_2(meson='pion', mom=10, if_rotate=True)
+    fig_1_2(meson='pion', mom=8, if_rotate=True)
+    fig_1_2(meson='pion', mom=6, if_rotate=True)
 
     # extrapolation_point()
     # extrapolation_point_add()
 
     # matching_comparison()
 
-    sys_comparison()
+    # sys_comparison()
 
     
 # %%

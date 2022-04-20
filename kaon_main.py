@@ -158,6 +158,7 @@ def kaon_main():
         # quasi_vs_lc_plot(x_ls, y_ls, quasi_mom_avg, lc_mom_avg, pz, meson)
 
     large_mom_da = large_mom_limit(y_ls, lc_mom_mix, mom_ls)
+
     lcda_large_pz_plot(meson, y_ls, lc_mom_mix[-1], large_mom_da)
     # lcda_mix_pz_plot(meson, y_ls)
     

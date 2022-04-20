@@ -106,15 +106,10 @@ t_label = r"$t$"
 meff_local_label = r"$\ln(C(z=0, t) / C(z=0, t+1))$"
 meff_non_local_label = r"$\ln(C(z, t) / C(z, t+1))$"
 ratio_label = r"$C(z, t) / C(z=0, t)$"
-H_pi_ro_re_label = r'Re$[e^{\frac{i z P_z}{2}} H_{\pi}(z)]$'
-H_pi_ro_im_label = r'Im$[e^{\frac{i z P_z}{2}} H_{\pi}(z)]$'
-H_pi_re_label = r'$Re[H_{\pi}(z)]$'
-H_pi_im_label = r'$Im[H_{\pi}(z)]$'
-
-H_k_ro_re_label = r'Re$[e^{\frac{i z P_z}{2}} H_{K}(z)]$'
-H_k_ro_im_label = r'Im$[e^{\frac{i z P_z}{2}} H_{K}(z)]$'
-H_k_re_label = r'$Re[H_{K}(z)]$'
-H_k_im_label = r'$Im[H_{K}(z)]$'
+hyb_ro_re_label = r'Re$[e^{\frac{i z P_z}{2}} H_{\pi}(z)]$'
+hyb_ro_im_label = r'Im$[e^{\frac{i z P_z}{2}} H_{\pi}(z)]$'
+hyb_re_label = r'$Re[H_{\pi}(z)]$'
+hyb_im_label = r'$Im[H_{\pi}(z)]$'
 
 def interp_1d(x_in, y_in, x_out, method="linear"): # interpolation
     f=interpolate.interp1d(x_in, y_in, kind=method)
@@ -349,16 +344,3 @@ def endpoint_ext(x_ls, lc, meson): # dtype of lc should be gvar
     x_ls_new = np.array(x_ls_new)
 
     return x_ls_new, lc_new
-
-def gv_to_samples(gv_ls, N_samp):
-    '''
-    transform gvar to bs samples
-    '''
-    samp_ls = []
-    for var in gv_ls:
-        samp = np.random.normal(loc=var.mean, scale=var.sdev, size=N_samp)
-        samp_ls.append(samp)
-
-    samp_ls = np.array(samp_ls).T
-
-    return samp_ls

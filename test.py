@@ -198,57 +198,57 @@
 # plt.yticks([1,2,3,4,5,5.5, 6.5], ['Del Debbio et al.\n(2003)', 'Arthur et al.\n(2011)', 'Bali et al.\n(2019)', 'Zhang et al.\n(2020)', 'HOPE Mom', 'HOPE TMR', 'This work'], fontsize=10)
 # plt.show()
 
-# %%
-from numpy.core.fromnumeric import partition
-from head import *
-x_ls = np.linspace(0, 1, 100)
-y_ls = DSE(x_ls)
+# # %%
+# from numpy.core.fromnumeric import partition
+# from head import *
+# x_ls = np.linspace(0, 1, 100)
+# y_ls = DSE(x_ls)
 
-a2 = calc_an(x_ls, y_ls, 2)
-print(a2)
-# %%
-import numpy as np
+# a2 = calc_an(x_ls, y_ls, 2)
+# print(a2)
+# # %%
+# import numpy as np
 
-t_dic = {}
-t_dic['mom=6'] = {} 
-t_dic['mom=6']['a06'] = [12, 13, 14] # 1 means t=1
-t_dic['mom=6']['a09'] = [8, 9, 10]
-t_dic['mom=6']['a12'] = [6, 7, 8]
-t_dic['mom=8'] = {}
-t_dic['mom=8']['a06'] = [8, 9, 10]
-t_dic['mom=8']['a09'] = [6, 7, 8]
-t_dic['mom=8']['a12'] = [4, 5, 6]
-t_dic['mom=10'] = {}
-t_dic['mom=10']['a06'] = [7, 8, 9]
-t_dic['mom=10']['a09'] = [5, 6, 7]
-t_dic['mom=10']['a12'] = [3, 4, 5]
-t_dic['mom=12'] = {}
-t_dic['mom=12']['a06'] = [7, 8, 9]
-t_dic['mom=12']['a09'] = [5, 6, 7]
-t_dic['mom=12']['a12'] = [3, 4, 5]
+# t_dic = {}
+# t_dic['mom=6'] = {} 
+# t_dic['mom=6']['a06'] = [12, 13, 14] # 1 means t=1
+# t_dic['mom=6']['a09'] = [8, 9, 10]
+# t_dic['mom=6']['a12'] = [6, 7, 8]
+# t_dic['mom=8'] = {}
+# t_dic['mom=8']['a06'] = [8, 9, 10]
+# t_dic['mom=8']['a09'] = [6, 7, 8]
+# t_dic['mom=8']['a12'] = [4, 5, 6]
+# t_dic['mom=10'] = {}
+# t_dic['mom=10']['a06'] = [7, 8, 9]
+# t_dic['mom=10']['a09'] = [5, 6, 7]
+# t_dic['mom=10']['a12'] = [3, 4, 5]
+# t_dic['mom=12'] = {}
+# t_dic['mom=12']['a06'] = [7, 8, 9]
+# t_dic['mom=12']['a09'] = [5, 6, 7]
+# t_dic['mom=12']['a12'] = [3, 4, 5]
 
 
-for key in t_dic:
-    print(key+', a06:')
-    print( 't=' + str(np.array(t_dic[key]['a06']) * 0.06) )
+# for key in t_dic:
+#     print(key+', a06:')
+#     print( 't=' + str(np.array(t_dic[key]['a06']) * 0.06) )
 
-    print(key+', a09:')
-    print( 't=' + str(np.array(t_dic[key]['a09']) * 0.09) )
+#     print(key+', a09:')
+#     print( 't=' + str(np.array(t_dic[key]['a09']) * 0.09) )
 
-    print(key+', a12:')
-    print( 't=' + str(np.array(t_dic[key]['a12']) * 0.12) )
-# %%
-from head import *
+#     print(key+', a12:')
+#     print( 't=' + str(np.array(t_dic[key]['a12']) * 0.12) )
+# # %%
+# from head import *
 
-file_path = 'DA_new.hdf5'
-myfile = h5.File(file_path,'r')
-print([key for key in myfile])
-print(np.shape(myfile['a12m130_pion']))
-# print(np.shape(myfile['a09m130_pion']))
-# print(np.shape(myfile['a06m130_pion']))
-print(np.shape(myfile['a12m130_kaon']))
-# print(np.shape(myfile['a09m130_kaon']))
-# print(np.shape(myfile['a06m130_kaon']))
+# file_path = 'DA_new.hdf5'
+# myfile = h5.File(file_path,'r')
+# print([key for key in myfile])
+# print(np.shape(myfile['a12m130_pion']))
+# # print(np.shape(myfile['a09m130_pion']))
+# # print(np.shape(myfile['a06m130_pion']))
+# print(np.shape(myfile['a12m130_kaon']))
+# # print(np.shape(myfile['a09m130_kaon']))
+# # print(np.shape(myfile['a06m130_kaon']))
 
 # %%
 # bs_ls = {}
@@ -299,5 +299,25 @@ print(np.shape(myfile['a12m130_kaon']))
 # print(np.shape(bs_ls[meson+a_str]))
 
 # gv.dump(bs_ls, 'bs_ls')
+
+# %%
+from head import *
+
+jc_x = gv.load('jc_x')
+jc_y = gv.load('jc_y')
+jun_x = gv.load('jun_x')
+jun_y = gv.load('jun_y')
+
+print(jun_x - jc_x)
+for i in range(len(jun_y)):
+    print(jun_y[i])
+    print(jc_y[i])
+    print('\n')
+
+print(gv.evalcov(jun_y))
+print(gv.evalcov(jc_y))
+
+mellin_moment(jc_x, jc_y, 2)
+mellin_moment(jun_x, jun_y, 2)
 
 # %%
