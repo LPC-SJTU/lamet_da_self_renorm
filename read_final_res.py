@@ -13,7 +13,7 @@ plt.fill_between(k_x, k_y1, k_y2, color="orange", alpha=0.4)
 plt.title('kaon')
 plt.show()
 
-# %% int with 1/x
+# %% int with 1/x, pion
 pi_gv = [gv.gvar( (pi_y1[i] + pi_y2[i])/2, abs(pi_y1[i]-pi_y2[i])/2 ) for i in range(len(pi_x)) ]
 
 pi_samp = gv_to_samples(pi_gv, N_samp=100)
@@ -35,6 +35,27 @@ val_avg = gv.dataset.avg_data(val_ls, bstrap=True)
 
 print(val_avg)
 
+# %% int with 1/x, kaon
+k_gv = [gv.gvar( (k_y1[i] + k_y2[i])/2, abs(k_y1[i]-k_y2[i])/2 ) for i in range(len(k_x)) ]
+
+k_samp = gv_to_samples(k_gv, N_samp=100)
+print(np.shape(k_samp))
+
+dx = 0.01
+print(k_x[:10])
+
+val_ls = []
+for n in range(100):
+    temp = []
+    for i in range(1, len(k_x)): # remove x=0 point
+        temp.append( k_samp[n][i] / k_x[i] )
+        val = np.sum(temp)
+        val = val * dx
+    val_ls.append(val)
+
+val_avg = gv.dataset.avg_data(val_ls, bstrap=True)
+
+print(val_avg)
 
 
 # %%
