@@ -101,7 +101,7 @@ def pion_main():
         print( 'For lambda bigger than ' + str(lam_ls[extend_point['mom='+str(mom)]]) + ', use extrapolation function.' )
         print( 'Lambda starts from ' + str(lam_ls[extend_fit_start['mom='+str(mom)]]) + ' are included in the extrapolation fit.' )
 
-        #extrapolation_check(meson+', mom='+str(mom), lam_ls, lc_re_ls, lam_ls[extend_fit_start['mom='+str(mom)]], lam_ls[extend_point['mom='+str(mom)]])
+        # extrapolation_check(meson+', mom='+str(mom), lam_ls, lc_re_ls, lam_ls[extend_fit_start['mom='+str(mom)]], lam_ls[extend_point['mom='+str(mom)]])
 
         if False:
             ### extrapolation and FT of LCDA ###
@@ -153,7 +153,7 @@ def pion_main():
 
         quasi_mom_mix.append(quasi_mom_avg)
 
-        # quasi_vs_lc_plot(x_ls, y_ls, quasi_mom_avg, lc_mom_avg, pz, meson)
+        quasi_vs_lc_plot(x_ls, y_ls, quasi_mom_avg, lc_mom_avg, pz, meson)
 
     large_mom_da = large_mom_limit(y_ls, lc_mom_mix, mom_ls)
 

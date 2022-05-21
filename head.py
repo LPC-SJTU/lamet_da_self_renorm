@@ -31,7 +31,7 @@ fig_size_lc = (fig_width * 0.8, fig_width * 0.6)
 fig_size_sq = (fig_width * 0.8, fig_width * 0.8)
 gridspec_sub = {'height_ratios': [3, 1], 'left': 0.12, 'right': 0.99, 'bottom': 0.15, 'top': 0.98}
 plt_axes = [0.1,0.12,0.85,0.8]
-plt_axes_small = [0.12,0.15,0.8,0.75]
+plt_axes_small = [0.17,0.15,0.8,0.75]
 errorp = {"markersize": 5, "mfc": "none", "linestyle": "none"} # circle
 errorb = {"markersize": 5, "mfc": "none", "linestyle": "none", "capsize": 3, "elinewidth": 1} # circle
 errorl = {"markersize": 5, "mfc": "none", "capsize": 3, "elinewidth": 1} # circle with line
@@ -115,6 +115,13 @@ H_k_ro_re_label = r'Re$[e^{\frac{i z P_z}{2}} H_{K}(z)]$'
 H_k_ro_im_label = r'Im$[e^{\frac{i z P_z}{2}} H_{K}(z)]$'
 H_k_re_label = r'$Re[H_{K}(z)]$'
 H_k_im_label = r'$Im[H_{K}(z)]$'
+
+phi_pi_t_phi_label = r'$\tilde{\phi}_{\pi}(x, P_z), \phi_{\pi}(x, P_z)$'
+phi_k_t_phi_label = r'$\tilde{\phi}_{K}(x, P_z), \phi_{K}(x, P_z)$'
+phi_pi_x_label = r'$\phi_{\pi}(x)$'
+phi_k_x_label = r'$\phi_{K}(x)$'
+phi_pi_x_p_label = r'$\phi_{\pi}(x, P_z)$'
+phi_k_x_p_label = r'$\phi_{K}(x, P_z)$'
 
 def interp_1d(x_in, y_in, x_out, method="linear"): # interpolation
     f=interpolate.interp1d(x_in, y_in, kind=method)
@@ -210,6 +217,7 @@ def rotate(re_conf_z, im_conf_z, lam_ls, back): # 2D list, 0 for configs, 1 for 
                 im_ro_conf_z[n_conf].append(val.imag)
 
     return re_ro_conf_z, im_ro_conf_z
+
 
 def gen_an(x, n):
     factor = 2*(2*n+3) / (3*(n+1)*(n+2))

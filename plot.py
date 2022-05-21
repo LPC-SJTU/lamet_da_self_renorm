@@ -16,6 +16,10 @@ def quasi_vs_lc_plot(x_ls, y_ls, quasi_da, lic_da, pz, meson):
     #ax.set_ylim([-0.19, 1.5])
     ax.set_xlim([-0.5, 1.5])
     ax.set_xlabel(x_label, **fs_p_l)
+    if meson == 'pion':
+        ax.set_ylabel(phi_pi_t_phi_label, **fs_p_l)
+    elif meson == 'kaon':
+        ax.set_ylabel(phi_k_t_phi_label, **fs_p_l)
     ax.legend(loc='upper right', **fs_p)
     ax.tick_params(direction='in', **ls_p_l)
     ax.grid(linestyle=':')
@@ -87,7 +91,7 @@ def lcda_mix_pz_plot(meson, x_ls):
 
 
 
-    fig = plt.figure(figsize=fig_size_lc)
+    fig = plt.figure(figsize=fig_size)
     ax = plt.axes(plt_axes_small)
     
     ax.fill_between(x_ls, [(val.mean + val.sdev) for val in mom_n1_lic_da], [(val.mean - val.sdev) for val in mom_n1_lic_da], color=color_list[0], alpha=0.4, label=r'$a \to 0, Pz=1.29GeV$')
@@ -101,8 +105,13 @@ def lcda_mix_pz_plot(meson, x_ls):
     ax.axvline(0.5, color='green', linestyle='--')
     ax.axhline(0, color='k', linestyle='--')
     ax.set_xlabel(x_label, **fs_p_l)
+    if meson == 'pion':
+        ax.set_ylabel(phi_pi_x_p_label, **fs_p_l)
+    elif meson == 'kaon':
+        ax.set_ylabel(phi_k_x_p_label, **fs_p_l)
     ax.set_ylim([-0.19, 1.5])
     ax.set_xlim([-0.5, 1.5])
+    ax.grid(linestyle=':')
     ax.legend(loc='lower center')
     ax.tick_params(direction='in', **ls_p_l)
     plt.savefig(meson+'/paper/lcda_Pz_mix.pdf', transparent=True)
@@ -250,6 +259,10 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
     ax.axhline(0, color='k', linestyle='--')
     #ax.set_title('DA light-cone Pz to infty', **fs_p)
     ax.set_xlabel(x_label, **fs_p_l)
+    if meson == 'pion':
+        ax.set_ylabel(phi_pi_x_label, **fs_p_l)
+    elif meson == 'kaon':
+        ax.set_ylabel(phi_k_x_label, **fs_p_l)
     ax.set_ylim([-0.19, 1.7])
     ax.set_xlim([0, 1])
     ax.legend(loc='lower center')
@@ -394,7 +407,7 @@ def fig_1_1():
     ax.set_xlim([0, 1.4])
     ax.set_xlabel(z_label, **fs_p_l)
     ax.set_ylim([-0.49, 1.99])
-    ax.set_title(H_pi_ro_re_label, **fs_p_l)
+    ax.set_ylabel(H_pi_ro_re_label, **fs_p_l)
     ax.tick_params(direction='in', **ls_p_l)
     ax.grid(linestyle=':')
     ax.legend(loc=(0.55, 0.48), **fs_p)
@@ -406,8 +419,8 @@ def fig_1_2(meson, mom, if_rotate=False):
     re_lam_ls = gv.load(meson+'/mom='+str(mom)+'/re_lam_ls')
     im_lam_ls = gv.load(meson+'/mom='+str(mom)+'/im_lam_ls')
 
-    quasi_re_ls = gv.load(meson+'/mom='+str(mom)+'/quasi_re_ls')
-    quasi_im_ls = gv.load(meson+'/mom='+str(mom)+'/quasi_im_ls')
+    quasi_re_ls = gv.load(meson+'/mom='+str(mom)+'/a_hyb_re_ls')
+    quasi_im_ls = gv.load(meson+'/mom='+str(mom)+'/a_hyb_im_ls')
 
 
     pz = int(mom) * 0.215
@@ -449,18 +462,18 @@ def fig_1_2(meson, mom, if_rotate=False):
     ax.grid(linestyle=':')
     if if_rotate == True:
         if meson == 'pion':
-            ax.set_title(H_pi_ro_re_label, **fs_p_l)
+            ax.set_ylabel(H_pi_ro_re_label, **fs_p_l)
         elif meson == 'kaon':
-            ax.set_title(H_k_ro_re_label, **fs_p_l)
+            ax.set_ylabel(H_k_ro_re_label, **fs_p_l)
 
         ax.legend(loc='upper right', **fs_p)
         plt.savefig(meson+'/paper/discrete_effect_rotated_Pz='+str(pz)+'GeV.pdf', transparent=True)
 
     elif if_rotate == False:
         if meson == 'pion':
-            ax.set_title(H_pi_re_label, **fs_p_l)
+            ax.set_ylabel(H_pi_re_label, **fs_p_l)
         elif meson == 'kaon':
-            ax.set_title(H_k_re_label, **fs_p_l)
+            ax.set_ylabel(H_k_re_label, **fs_p_l)
     
         ax.legend(loc='upper right', **fs_p)
         plt.savefig(meson+'/paper/discrete_effect_Pz='+str(pz)+'GeV.pdf', transparent=True)
@@ -490,9 +503,9 @@ def fig_1_2(meson, mom, if_rotate=False):
         ax.set_ylim([-0.29, 0.29])
 
         if meson == 'pion':
-            ax.set_title(H_pi_ro_im_label, **fs_p_l)
+            ax.set_ylabel(H_pi_ro_im_label, **fs_p_l)
         elif meson == 'kaon':
-            ax.set_title(H_k_ro_im_label, **fs_p_l)
+            ax.set_ylabel(H_k_ro_im_label, **fs_p_l)
 
         ax.legend(loc='lower right', ncol=2, **fs_p)
         plt.savefig(meson+'/paper/discrete_effect_rotated_imag_part_Pz='+str(pz)+'GeV.pdf', transparent=True)
@@ -500,9 +513,9 @@ def fig_1_2(meson, mom, if_rotate=False):
         ax.set_ylim([-1.09, 0.49])
         
         if meson == 'pion':
-            ax.set_title(H_pi_im_label, **fs_p_l)
+            ax.set_ylabel(H_pi_im_label, **fs_p_l)
         elif meson == 'kaon':
-            ax.set_title(H_k_im_label, **fs_p_l)
+            ax.set_ylabel(H_k_im_label, **fs_p_l)
 
         ax.legend(loc='lower right', **fs_p)
         plt.savefig(meson+'/paper/discrete_effect_imag_part_Pz='+str(pz)+'GeV.pdf', transparent=True)
@@ -601,11 +614,14 @@ def matching_comparison():
 
 
 
-    fig = plt.figure(figsize=fig_size_lc)
+    fig = plt.figure(figsize=fig_size)
     ax = plt.axes(plt_axes_small)
 
     ax.fill_between(p_mom_mat_x, p_mom_mat_y1, p_mom_mat_y2, color=color_list[0], label='Mom matching', alpha=0.5)
     ax.fill_between(p_coor_mat_x, p_coor_mat_y1, p_coor_mat_y2, color=color_list[1], label='Coor matching', alpha=0.5)
+
+    ax.fill_between(np.linspace(-0.5, 0.1, 500), np.ones(500)*-1, np.ones(500)*2, color='grey', alpha=0.4)
+    ax.fill_between(np.linspace(0.9, 1.5, 500), np.ones(500)*-1, np.ones(500)*2, color='grey', alpha=0.4)
 
     ax.axvline(0.5, color='green', linestyle='--')
     ax.axvline(0, color='k', linestyle='--')
@@ -613,19 +629,24 @@ def matching_comparison():
     ax.axhline(0, color='k', linestyle='--')
     #ax.set_title('DA light-cone Pz to infty', **fs_p)
     ax.set_xlabel(x_label, **fs_p_l)
+    ax.set_ylabel(phi_pi_x_label, **fs_p_l)
     ax.set_ylim([-0.19, 1.5])
-    ax.set_xlim([-0.25, 1.25])
+    ax.set_xlim([-0.5, 1.5])
+    ax.grid(linestyle=':')
     ax.legend(loc='lower center')
     ax.tick_params(direction='in', **ls_p_l)
     plt.savefig('pion/paper/matching_comparison.pdf', transparent=True)
     plt.show()
 
 
-    fig = plt.figure(figsize=fig_size_lc)
+    fig = plt.figure(figsize=fig_size)
     ax = plt.axes(plt_axes_small)
 
     ax.fill_between(k_mom_mat_x, k_mom_mat_y1, k_mom_mat_y2, color=color_list[0], label='Mom matching', alpha=0.5)
     ax.fill_between(k_coor_mat_x, k_coor_mat_y1, k_coor_mat_y2, color=color_list[1], label='Coor matching', alpha=0.5)
+
+    ax.fill_between(np.linspace(-0.5, 0.1, 500), np.ones(500)*-1, np.ones(500)*2, color='grey', alpha=0.4)
+    ax.fill_between(np.linspace(0.9, 1.5, 500), np.ones(500)*-1, np.ones(500)*2, color='grey', alpha=0.4)
 
     ax.axvline(0.5, color='green', linestyle='--')
     ax.axvline(0, color='k', linestyle='--')
@@ -633,8 +654,10 @@ def matching_comparison():
     ax.axhline(0, color='k', linestyle='--')
     #ax.set_title('DA light-cone Pz to infty', **fs_p)
     ax.set_xlabel(x_label, **fs_p_l)
+    ax.set_ylabel(phi_k_x_label, **fs_p_l)
     ax.set_ylim([-0.19, 1.5])
-    ax.set_xlim([-0.25, 1.25])
+    ax.set_xlim([-0.5, 1.5])
+    ax.grid(linestyle=':')
     ax.legend(loc='lower center')
     ax.tick_params(direction='in', **ls_p_l)
     plt.savefig('kaon/paper/matching_comparison.pdf', transparent=True)
@@ -780,7 +803,7 @@ def extrapolation_point_add(n=0.18, mom='10', lambdaL_1=10.946315866166527, fit_
     ax.axhline(0, color='k', linestyle='--', lw=0.8)
     ax.set_xlabel(lambda_label, **fs_p_l)
     ax.set_ylim([-0.29, 1.19])
-    #ax.set_title(title)
+    ax.set_ylabel(H_pi_ro_re_label, **fs_p_l)
     ax.tick_params(direction='in', **ls_p_l)
     ax.legend(loc='upper right', **fs_p)
     ax.grid(linestyle=':')
@@ -792,13 +815,14 @@ def extrapolation_point_add(n=0.18, mom='10', lambdaL_1=10.946315866166527, fit_
 if __name__ == '__main__':
     # ZMSbar_check()
     # fig_1_1()
-    fig_1_2(meson='kaon', mom=10, if_rotate=True)
-    fig_1_2(meson='kaon', mom=8, if_rotate=True)
-    fig_1_2(meson='kaon', mom=6, if_rotate=True)
+    # fig_1_2(meson='kaon', mom=10, if_rotate=True)
+    # fig_1_2(meson='kaon', mom=8, if_rotate=True)
+    # fig_1_2(meson='kaon', mom=6, if_rotate=True)
 
+    fig_1_2(meson='pion', mom=10, if_rotate=False)
     fig_1_2(meson='pion', mom=10, if_rotate=True)
-    fig_1_2(meson='pion', mom=8, if_rotate=True)
-    fig_1_2(meson='pion', mom=6, if_rotate=True)
+    # fig_1_2(meson='pion', mom=8, if_rotate=True)
+    # fig_1_2(meson='pion', mom=6, if_rotate=True)
 
     # extrapolation_point()
     # extrapolation_point_add()

@@ -74,7 +74,7 @@ def hyb_vs_RIMOM_plot():
     ax.set_xlabel(z_label, **fs_p_l)
     ax.set_ylim([-0.49, 1.249])
     ax.tick_params(direction='in', **ls_p_l)
-    ax.set_title(hyb_ro_re_label, **fs_p_l)
+    ax.set_ylabel(H_pi_ro_re_label, **fs_p_l)
     ax.grid(linestyle=':')
 
     plt.savefig(meson+'/paper/renorm_comparison_mom_10_a06.pdf', transparent=True)

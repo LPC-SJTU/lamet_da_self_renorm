@@ -193,7 +193,7 @@ def t_plot(a_str='a06', file_path='DA_new.hdf5'):
         # ax.fill_between(np.array([8,9,10]), np.ones(3)*(re_8910[0]+re_8910[1]), np.ones(3)*(re_8910[0]-re_8910[1]), color='red', label='fix t=8,9,10', alpha=0.4)
         # ax.axvline(4, linestyle='--', color='orange')
         # ax.axvline(6, linestyle='--', color='orange')
-        ax.set_title(r'$\phi_2(z=4, t) / \phi_2(z=0, t)$', **fs_p_l)
+        ax.set_ylabel(r'$\phi_2(z=4, t) / \phi_2(z=0, t)$', **fs_p_l)
         ax.set_ylim([0.3, 0.6])
         ax.set_xlabel('t', **fs_p_l)
         ax.tick_params(direction='in', **ls_p_l)
