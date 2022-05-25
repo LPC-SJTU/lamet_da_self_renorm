@@ -232,7 +232,10 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
 
     ax.fill_between(x_ls, y1, y2, color=color_list[0], alpha=0.5)
 
-    # gv.dump([x_ls, y1, y2], 'final_plot_kaon')
+    if meson == 'pion':
+        gv.dump([x_ls, y1, y2], 'final_plot_pion')
+    elif meson == 'kaon':
+        gv.dump([x_ls, y1, y2], 'final_plot_kaon')
 
     # gv.dump(x_ls, 'temp/p_fit_with_all_sys_x')
     # gv.dump(y1, 'temp/p_fit_with_all_sys_y1')

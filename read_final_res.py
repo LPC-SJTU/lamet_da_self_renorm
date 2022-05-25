@@ -4,6 +4,9 @@ from head import *
 [pi_x, pi_y1, pi_y2] = gv.load('final_plot_pion')
 [k_x, k_y1, k_y2] = gv.load('final_plot_kaon')
 
+print(pi_x[:10])
+print(len(pi_x))
+
 plt.fill_between(pi_x, pi_y1, pi_y2, color="orange", alpha=0.4)
 plt.title('pion')
 plt.show()
