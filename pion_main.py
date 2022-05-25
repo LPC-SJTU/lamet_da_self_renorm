@@ -9,8 +9,7 @@ def pion_main():
     meson = 'pion'
     zR_dic, m_pdf_dic = pdf_zR()
 
-    # x_ls = np.arange(-2-0.01, 3.02, 0.01) # x after ft, for quasi before matching #todo 改回来
-    x_ls = np.arange(-2-0.001, 3.002, 0.001)
+    x_ls = np.arange(-2-0.01, 3.02, 0.01) # x after ft, for quasi before matching 
     y_ls = x_ls
 
     extend_point = {}
@@ -104,17 +103,17 @@ def pion_main():
 
         # extrapolation_check(meson+', mom='+str(mom), lam_ls, lc_re_ls, lam_ls[extend_fit_start['mom='+str(mom)]], lam_ls[extend_point['mom='+str(mom)]])
 
-        if True: #todo 改 False
+        if False:
             ### extrapolation and FT of LCDA ###
             print('>>> extrapolation and FT of LCDA at mom='+str(mom))
             lam_ls_ex, lc_ext_ls, lc_mom_ls = extrapolation_ft.main(lam_ls, extend_fit_start['mom='+str(mom)], extend_point['mom='+str(mom)], lc_re_ls, lc_im_ls, mode='lcda')
-        #     gv.dump(lam_ls_ex, meson+'/mom='+str(mom)+'/lam_ls_ex')
-        #     gv.dump(lc_ext_ls, meson+'/mom='+str(mom)+'/lc_ext_ls')
-        #     gv.dump(lc_mom_ls, meson+'/mom='+str(mom)+'/lc_mom_ls')
+            gv.dump(lam_ls_ex, meson+'/mom='+str(mom)+'/lam_ls_ex')
+            gv.dump(lc_ext_ls, meson+'/mom='+str(mom)+'/lc_ext_ls')
+            gv.dump(lc_mom_ls, meson+'/mom='+str(mom)+'/lc_mom_ls')
 
-        # lam_ls_ex = gv.load(meson+'/mom='+str(mom)+'/lam_ls_ex')
-        # lc_ext_ls = gv.load(meson+'/mom='+str(mom)+'/lc_ext_ls') # extrapolatd in the coor space
-        # lc_mom_ls = gv.load(meson+'/mom='+str(mom)+'/lc_mom_ls') # in the mom space #todo 解注释
+        lam_ls_ex = gv.load(meson+'/mom='+str(mom)+'/lam_ls_ex')
+        lc_ext_ls = gv.load(meson+'/mom='+str(mom)+'/lc_ext_ls') # extrapolatd in the coor space
+        lc_mom_ls = gv.load(meson+'/mom='+str(mom)+'/lc_mom_ls') # in the mom space
 
         lc_mom_avg = gv.dataset.avg_data(lc_mom_ls, bstrap=True)
 
@@ -146,15 +145,15 @@ def pion_main():
             gv.dump(quasi_ext_ls, meson+'/mom='+str(mom)+'/quasi_ext_ls')
             gv.dump(quasi_mom_ls, meson+'/mom='+str(mom)+'/quasi_mom_ls')
 
-        # lam_ls_ex = gv.load(meson+'/mom='+str(mom)+'/lam_ls_ex')
-        # quasi_ext_ls = gv.load(meson+'/mom='+str(mom)+'/quasi_ext_ls')
-        # quasi_mom_ls = gv.load(meson+'/mom='+str(mom)+'/quasi_mom_ls')
+        lam_ls_ex = gv.load(meson+'/mom='+str(mom)+'/lam_ls_ex')
+        quasi_ext_ls = gv.load(meson+'/mom='+str(mom)+'/quasi_ext_ls')
+        quasi_mom_ls = gv.load(meson+'/mom='+str(mom)+'/quasi_mom_ls')
 
-        # quasi_mom_avg = gv.dataset.avg_data(quasi_mom_ls, bstrap=True)
+        quasi_mom_avg = gv.dataset.avg_data(quasi_mom_ls, bstrap=True)
 
-        # quasi_mom_mix.append(quasi_mom_avg)
+        quasi_mom_mix.append(quasi_mom_avg)
 
-        # quasi_vs_lc_plot(x_ls, y_ls, quasi_mom_avg, lc_mom_avg, pz, meson) #todo 解注释
+        quasi_vs_lc_plot(x_ls, y_ls, quasi_mom_avg, lc_mom_avg, pz, meson) 
 
     large_mom_da = large_mom_limit(y_ls, lc_mom_mix, mom_ls)
 
