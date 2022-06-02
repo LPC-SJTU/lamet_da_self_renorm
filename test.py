@@ -321,3 +321,45 @@ mellin_moment(jc_x, jc_y, 2)
 mellin_moment(jun_x, jun_y, 2)
 
 # %%
+from head import *
+
+
+plt.figure()
+
+meson = 'pion'
+for mom in [6,8,10]:
+    re_lam_ls = gv.load(meson+'/mom='+str(mom)+'/re_lam_ls_bare')
+    im_lam_ls = gv.load(meson+'/mom='+str(mom)+'/im_lam_ls_bare')
+    lam_ls = gv.load(meson+'/mom='+str(mom)+'/lam_ls')
+
+    re_ls, im_ls = rotate(re_lam_ls[2], im_lam_ls[2], lam_ls, back=False)
+
+    re_gv = gv.dataset.avg_data(re_ls, bstrap=True)
+
+    plt.errorbar(lam_ls, [v.mean for v in re_gv], [v.sdev for v in re_gv], label='mom='+str(mom), **errorb)
+plt.title('a12, real')
+plt.legend()
+plt.show()
+
+
+
+
+plt.figure()
+
+meson = 'pion'
+for mom in [6,8,10]:
+    re_lam_ls = gv.load(meson+'/mom='+str(mom)+'/re_lam_ls_bare')
+    im_lam_ls = gv.load(meson+'/mom='+str(mom)+'/im_lam_ls_bare')
+    lam_ls = gv.load(meson+'/mom='+str(mom)+'/lam_ls')
+
+    re_ls, im_ls = rotate(re_lam_ls[2], im_lam_ls[2], lam_ls, back=False)
+
+    im_gv = gv.dataset.avg_data(im_ls, bstrap=True)
+
+    plt.errorbar(lam_ls, [v.mean for v in im_gv], [v.sdev for v in im_gv], label='mom='+str(mom), **errorb)
+plt.title('a12, imag')
+plt.legend()    
+plt.show()
+
+    
+# %%
