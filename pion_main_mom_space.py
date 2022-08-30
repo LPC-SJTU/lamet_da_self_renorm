@@ -1,5 +1,4 @@
 # %%
-from numpy import add
 from head import *
 from meson_da_hyb_selfrenorm_class import *
 from pdf_self_renorm import pdf_zR
@@ -130,15 +129,15 @@ def pion_main():
 
         
 
-        # ### extrapolation at the endpoints ###
-        # lc_mom_gv = [add_sdev(lc, lc_mom_avg) for lc in lc_mom_ls]
+        ### extrapolation at the endpoints ###
+        lc_mom_gv = [add_sdev(lc, lc_mom_avg) for lc in lc_mom_ls]
 
-        # lc_mom_ls = []
-        # print('>>> fitting the lc endpoints of '+meson)
-        # for n_conf in tqdm(range(len(lc_mom_gv))):
-        #     y_ls, lc_new = endpoint_ext(x_ls, lc_mom_gv[n_conf], meson)
-        #     lc_mom_ls.append(lc_new)
-        # lc_mom_avg = gv.dataset.avg_data(lc_mom_ls, bstrap=True)
+        lc_mom_ls = []
+        print('>>> fitting the lc endpoints of '+meson)
+        for n_conf in tqdm(range(len(lc_mom_gv))):
+            y_ls, lc_new = endpoint_ext(x_ls, lc_mom_gv[n_conf], meson)
+            lc_mom_ls.append(lc_new)
+        lc_mom_avg = gv.dataset.avg_data(lc_mom_ls, bstrap=True)
 
 
 

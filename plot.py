@@ -128,6 +128,8 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
         mom_sys = abs(large_mom_lic_da[idx].mean - mom_n_lic_da[idx].mean) # system error
         mom_sys_ls.append(mom_sys)
 
+    gv.dump(mom_sys_ls, 'err_dump/large_mom_limit_'+meson)
+
     ##
     # mom_sys_ls = np.zeros_like(large_mom_lic_da)
 
@@ -144,6 +146,8 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
         ext_sys = abs(large_mom_lic_da[idx].mean - ext_y[idx])
         ext_sys_ls.append(ext_sys)
 
+    gv.dump(ext_sys_ls, 'err_dump/sys_extrapolation_'+meson)
+
     ##
     # ext_sys_ls = np.zeros_like(large_mom_lic_da)
     
@@ -157,6 +161,8 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
     for idx in range(len(x_ls)):
         con_sys = abs(large_mom_lic_da[idx].mean - con_y[idx])
         con_sys_ls.append(con_sys)
+
+    gv.dump(con_sys_ls, 'err_dump/sys_continuum_limit_'+meson)
 
     ##
     # con_sys_ls = np.zeros_like(large_mom_lic_da)
@@ -172,9 +178,16 @@ def lcda_large_pz_plot(meson, x_ls, mom_n_lic_da, large_mom_lic_da):
         mu_sys = abs(large_mom_lic_da[idx].mean - mu_y[idx])
         mu_sys_ls.append(mu_sys)
 
+    gv.dump(mu_sys_ls, 'err_dump/sys_mu_'+meson)
+
     ##
     # mu_sys_ls = np.zeros_like(large_mom_lic_da)
 
+    gv.dump([v.sdev for v in large_mom_lic_da], 'err_dump/stat_'+meson)
+
+    gv.dump([v.mean for v in large_mom_lic_da], 'err_dump/mean_'+meson)
+
+    gv.dump(x_ls, 'err_dump/x_ls_'+meson)
 
 
     y1 = np.array([( large_mom_lic_da[id].mean + np.sqrt(large_mom_lic_da[id].sdev**2 + mom_sys_ls[id]**2 + ext_sys_ls[id]**2 + con_sys_ls[id]**2 + mu_sys_ls[id]**2) ) for id in range(len(large_mom_lic_da)) ]) 

@@ -1,4 +1,6 @@
 # %%
+import gvar as gv
+import matplotlib.pyplot as plt
 from head import *
 
 [pi_x, pi_y1, pi_y2] = gv.load('final_plot_pion')
