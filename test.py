@@ -1,3 +1,27 @@
+# %%
+import gvar as gv
+import numpy as np
+
+pion_normalized_bef_renorm = {}
+
+meson = 'pion'
+for mom in [6,8,10]:
+    da_an_ls = gv.load(meson+'/mom='+str(mom)+'/da_an_ls')
+    pion_normalized_bef_renorm['mom={}'.format(mom)] = da_an_ls
+
+print([key for key in pion_normalized_bef_renorm])
+print(np.shape(pion_normalized_bef_renorm['mom=8']))
+
+# gv.dump(pion_normalized_bef_renorm, 'dump/pion_normalized_bef_renorm')
+
+
+# for read
+import gvar as gv
+
+pion_normalized_bef_renorm = gv.load('./pion_normalized_bef_renorm')
+
+print([key for key in pion_normalized_bef_renorm]) # 3 momenta
+print(np.shape(pion_normalized_bef_renorm['mom=8'])) # (3, 600, 25) should be (3 lattice spacing {a06, a09, a12}, N_conf, len(z_ls_extend)) (complex number)
 
 
 # %%

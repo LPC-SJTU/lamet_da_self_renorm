@@ -6,15 +6,29 @@ from head import *
 [pi_x, pi_y1, pi_y2] = gv.load('final_plot_pion')
 [k_x, k_y1, k_y2] = gv.load('final_plot_kaon')
 
-print(pi_x[:10])
+pi_cv = (pi_y1 + pi_y2) / 2
+pi_err_all = abs((pi_y1 - pi_y2) / 2)
+
+k_cv = (k_y1 + k_y2) / 2
+k_err_all = abs((k_y1 - k_y2) / 2)
+
+print(pi_x[-10:])
 print(len(pi_x))
 
 plt.fill_between(pi_x, pi_y1, pi_y2, color="orange", alpha=0.4)
 plt.title('pion')
 plt.show()
 
+plt.fill_between(pi_x, pi_cv+pi_err_all, pi_cv-pi_err_all, color="blue", alpha=0.4)
+plt.title('pion')
+plt.show()
+
 
 plt.fill_between(k_x, k_y1, k_y2, color="orange", alpha=0.4)
+plt.title('kaon')
+plt.show()
+
+plt.fill_between(k_x, k_cv+k_err_all, k_cv-k_err_all, color="blue", alpha=0.4)
 plt.title('kaon')
 plt.show()
 
@@ -85,27 +99,48 @@ plt.show()
 
 
 # %%
-# f = open('./final_res.txt', 'w')
+# f = open('temp/pion_err_all.txt', 'w')
 # line = []
 # line.append('x')
 # line.append('\t')
-# line.append('K')
+# line.append('cv')
 # line.append('\t')
-# line.append(r'$\pi$')
+# line.append('err_all')
 # line.append('\n')
 # f.writelines(line)
 
-# for i in range(len(x_tex)):
+# for i in range(len(pi_x)):
 #     line = []
-#     line.append("%.2f~~&~~" % x_tex[i])
+#     line.append(str(pi_x[i]))
 #     line.append('\t')
-#     line.append(str(k_tex[i]) + "~~&~~")
+#     line.append(str(pi_cv[i]))
 #     line.append('\t')
-#     line.append(str(pi_tex[i]) + "~~&~~" + "\\"+"\\")
+#     line.append(str(pi_err_all[i]))
 #     line.append('\n')
 #     f.writelines(line)
 # f.close
 
+
+# f = open('temp/kaon_err_all.txt', 'w')
+# line = []
+# line.append('x')
+# line.append('\t')
+# line.append('cv')
+# line.append('\t')
+# line.append('err_all')
+# line.append('\n')
+# f.writelines(line)
+
+# for i in range(len(k_x)):
+#     line = []
+#     line.append(str(k_x[i]))
+#     line.append('\t')
+#     line.append(str(k_cv[i]))
+#     line.append('\t')
+#     line.append(str(k_err_all[i]))
+#     line.append('\n')
+#     f.writelines(line)
+# f.close
 
 
 # %%
