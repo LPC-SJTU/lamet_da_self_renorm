@@ -17,3 +17,6 @@ DA_new.hdf5:
 		 <HDF5 dataset "a12m130_kaon": shape (7, 932, 25, 15, 2), type "<f8">
 	a12m130_pion:
 		 <HDF5 dataset "a12m130_pion": shape (7, 829, 25, 15, 2), type "<f8">
+
+shape: momentum, N_conf, z, t, real/imag
+momentum list: 0, 2, 4, 6, 8, 10, 12

@@ -1,3 +1,31 @@
+
+# %%
+import gvar as gv
+from pdf_self_renorm import pdf_zR
+from head import *
+
+zR_dic, m_pdf_dic = pdf_zR()
+
+print(zR_dic)
+print(z_ls_extend)
+
+
+# output the zR factor
+with open('zR.txt', 'w') as file:
+    for key in zR_dic:
+        line = '\n' + key + '\n'
+        file.write(line)
+
+        for i in range(len(zR_dic[key])):
+            line = str(round(z_ls_extend[i], 2)) + '\t' + str(gv.mean(zR_dic[key][i])) + '\t' + str(gv.sdev(zR_dic[key][i])) + '\n'
+            file.write(line)
+
+    file.close()
+
+
+
+
+
 # %%
 import gvar as gv
 import numpy as np

@@ -35,7 +35,7 @@ def pdf_zR(plot=False): # main func to extract zR
     posterior_extend = f1_extend(gz_fit_result.p, f1_ls, fit_start=7) # fit_start is the idx, comes from f1 plot
     # posterior_extend = gz_fit_result.p # no extend
 
-    ### constract zR_dic for da renormalization ###
+    ### construct zR_dic for da renormalization ###
     ###############################################
     zR_dic = gv.BufferDict() 
     for a in a_milc_ls:
