@@ -1,12 +1,21 @@
 # %%
 
-from head import *
+# from head import *
+
+import matplotlib.pyplot as plt
+
+fig_width = 6.75 # in inches, 2x as wide as APS column
+gr        = 1.618034333 # golden ratio
+fig_size = (fig_width * 0.8, fig_width * 0.6)
+errorb = {"markersize": 5, "mfc": "none", "linestyle": "none", "capsize": 3, "elinewidth": 1} # circle
+fs_p = {"fontsize": 13} # font size of text, label, ticks
+x_label = r"$x$"
 
 def val(px):
     return 0.2 + (px - 495)/(844 - 495) * 0.1
 
 
-fig = plt.figure(figsize=fig_size_lc)
+fig = plt.figure(figsize=fig_size)
 plt_axes_ = [0.25,0.15,0.7,0.8]
 ax = plt.axes(plt_axes_)
 
@@ -33,3 +42,4 @@ ax.set_xticks([0.2, 0.3])
 ax.set_xlabel(r'$<\xi^2>(\mu = 2 \rm{GeV})$')
 plt.yticks([1,2,3,4,5,5.5, 6.5], ['Del Debbio et al.\n(2003)', 'Arthur et al.\n(2011)', 'Bali et al.\n(2019)', 'Zhang et al.\n(2020)', 'HOPE Mom', 'HOPE TMR', 'This work'], fontsize=10)
 plt.show()
+# %%

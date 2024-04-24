@@ -223,7 +223,15 @@ a_str_ls = [ '0.0574', '0.0882', '0.1213' ]
 
 
 
+# %%
+# from pdf_self_renorm import pdf_zR
+# from head import ZMS_da
+# import gvar as gv
 
+# zR_dic, m_pdf_dic = pdf_zR()
+# print(zR_dic)
+
+# gv.dump(zR_dic, 'zR_dic')
 
 
 # %%
