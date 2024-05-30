@@ -28,6 +28,42 @@ plt.grid(linestyle=":")
 plt.show()
 
 
+plt.plot( lambda_ls, np.mean(pion_mom6_im[0], axis=0), label='a=0.06' )
+plt.plot( lambda_ls, np.mean(pion_mom6_im[1], axis=0), label='a=0.09' )
+plt.plot( lambda_ls, np.mean(pion_mom6_im[2], axis=0), label='a=0.12' )
+plt.title('Imag part of the quasi at mom=6')
+plt.xlabel('lambda')
+plt.legend()
+plt.tick_params(direction="in", top="on", right="on")
+plt.grid(linestyle=":")
+plt.show()
+
+# %%
+#! coordinate space quasi, after continuum limit, after extrapolation, waiting for FT
+#* momentum = 6, 8, 10
+#* lambda_ls_ex: the lambda list after extrapolation, shape = (2001,)
+#* pion_mom6_quasi_ext_ls: the real part of the quasi after extrapolation, shape = ( N of bs samples = 600, len(lambda_ls_ex) = 2001 )
+
+pion_mom6_lam_ls_ex = gv.load("dump/pion_mom6_lam_ls_ex")
+pion_mom8_lam_ls_ex = gv.load("dump/pion_mom8_lam_ls_ex")
+pion_mom10_lam_ls_ex = gv.load("dump/pion_mom10_lam_ls_ex")
+
+pion_mom6_quasi_ext_ls = gv.load("dump/pion_mom6_quasi_ext_ls")
+pion_mom8_quasi_ext_ls = gv.load("dump/pion_mom8_quasi_ext_ls")
+pion_mom10_quasi_ext_ls = gv.load("dump/pion_mom10_quasi_ext_ls")
+
+import matplotlib.pyplot as plt
+plt.plot( pion_mom6_lam_ls_ex, np.mean(pion_mom6_quasi_ext_ls, axis=0), label='mom=6' )
+plt.title('quasi in the coor space after extrapolation with mom=6')
+plt.xlabel('lambda')
+plt.legend()
+plt.tick_params(direction="in", top="on", right="on")
+plt.grid(linestyle=":")
+plt.xlim(-20, 20)
+plt.show()
+
+
+
 # %%
 #! momentum space quasi, after continuum limit, after extrapolation and FT, waiting for inverse matching
 #* momentum = 6, 8, 10
