@@ -131,17 +131,17 @@ def kaon_main():
         
 
         # ### extrapolation at the endpoints ###
-        # lc_mom_gv = [add_sdev(lc, lc_mom_avg) for lc in lc_mom_ls]
+        lc_mom_gv = [add_sdev(lc, lc_mom_avg) for lc in lc_mom_ls]
 
-        # lc_mom_ls = []
-        # print('>>> fitting the lc endpoints of '+meson)
-        # for n_conf in tqdm(range(len(lc_mom_gv))):
-        #     y_ls, lc_new = endpoint_ext(x_ls, lc_mom_gv[n_conf], meson)
-        #     lc_mom_ls.append(lc_new)
-        # lc_mom_avg = gv.dataset.avg_data(lc_mom_ls, bstrap=True)
+        lc_mom_ls = []
+        print('>>> fitting the lc endpoints of '+meson)
+        for n_conf in tqdm(range(len(lc_mom_gv))):
+            y_ls, lc_new = endpoint_ext(x_ls, lc_mom_gv[n_conf], meson)
+            lc_mom_ls.append(lc_new)
+        lc_mom_avg = gv.dataset.avg_data(lc_mom_ls, bstrap=True)
 
 
-
+        print(">>> y_ls length: ", len(y_ls))
 
         lc_mom_mix.append(lc_mom_avg)
 
@@ -154,6 +154,11 @@ def kaon_main():
     lcda_large_pz_plot(meson, y_ls, lc_mom_mix[-1], large_mom_da)
     # lcda_mix_pz_plot(meson, y_ls)
     
+    kaon_final_plot = {}
+    kaon_final_plot['y_ls'] = y_ls
+    kaon_final_plot['mom_n_lic_da'] = lc_mom_mix[-1]
+    kaon_final_plot['large_mom_lic_da'] = large_mom_da
+    gv.dump(kaon_final_plot, 'final_plots/dump/kaon_final_plot_mom_space.pkl')
 
 if __name__ == '__main__':
     kaon_main()

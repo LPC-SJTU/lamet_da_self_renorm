@@ -214,6 +214,9 @@ def gz_fit(pdf_d, a_milc_ls, a_rbc_ls, plot=True): # eliminate discrete effects,
 
     fit_result = lsf.nonlinear_fit(data=(z_x, lnm), prior=priors, fcn=fcn, maxit=10000, svdcut=1e-100, fitter='scipy_least_squares')
 
+    print(">>>")
+    print(fit_result)
+
     post1 = np.array([val.mean for val in fcn(z_x, fit_result.p)['milc']])
     err1 = np.array([val.sdev for val in fcn(z_x, fit_result.p)['milc']])
 
@@ -248,12 +251,22 @@ def m0_fit(gz_ls, plot=True):
     def fcn(x, p):
         val = np.log(ZMS_pdf(np.array(x))) + p['m0']*np.array(x) + p['b']
         return val
+    
+    print(">>> z_ls")
+    print(gz_ls[0][:3])
+    
+    print('>>> log(MS-bar)')
+    print(np.log(ZMS_pdf(np.array(gz_ls[0][:3]))))
+
+    print('>>> gz')
+    print(gz_ls[1][:3])
 
     priors = gv.BufferDict()
     priors['m0'] = gv.gvar(0, 20)
     priors['b'] = gv.gvar(0, 100)
 
     fit_result = lsf.nonlinear_fit(data=(gz_ls[0][:3], gz_ls[1][:3]), prior=priors, fcn=fcn, maxit=10000, svdcut=1e-100, fitter='scipy_least_squares')
+    print(fit_result)
 
     y1 = (fit_result.p['m0'].mean + fit_result.p['m0'].sdev) * np.arange(0, 0.3, 0.01)
     y2 = (fit_result.p['m0'].mean - fit_result.p['m0'].sdev) * np.arange(0, 0.3, 0.01)
@@ -282,6 +295,8 @@ def m0_fit(gz_ls, plot=True):
         plt.legend(loc='upper right')
         plt.show()
 
+    print(">>>")
+    print(mR_pdf / zms)
     print('fit result of m0: '+str(fit_result.p['m0']))
 
     return fit_result.p['m0'], mR_pdf

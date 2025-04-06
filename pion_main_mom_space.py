@@ -163,6 +163,13 @@ def pion_main():
     lcda_large_pz_plot(meson, y_ls, lc_mom_mix[-1], large_mom_da)
     # lcda_mix_pz_plot(meson, y_ls)
     
+    pion_final_plot = {}
+    pion_final_plot["y_ls"] = y_ls
+    pion_final_plot["mom_n_lic_da"] = lc_mom_mix[-1]
+    pion_final_plot["large_mom_lic_da"] = large_mom_da
+    
+    gv.dump(pion_final_plot, 'final_plots/dump/pion_final_plot_mom_space.pkl')
+    
 
 if __name__ == '__main__':
     pion_main()

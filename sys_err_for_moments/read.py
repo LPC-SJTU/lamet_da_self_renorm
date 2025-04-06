@@ -21,7 +21,7 @@ for idx in range(len(x_ls)):
     mom_sys = abs(y_no_sys[idx] - mom_y[idx])
     mom_sys_ls.append(mom_sys)
 
-print(np.shape(mom_y))
+print("mom_sys_ls shape: ", np.shape(mom_sys_ls))
 
 ################################
 ## sys error of extrapolation ##
@@ -33,7 +33,7 @@ for idx in range(len(x_ls)):
     ext_sys = abs(y_no_sys[idx] - ext_y[idx])
     ext_sys_ls.append(ext_sys)
 
-print(np.shape(ext_y))
+print("ext_sys_ls shape: ", np.shape(ext_sys_ls))
 
 ##################################
 ## sys error of continuum limit ##
@@ -45,7 +45,7 @@ for idx in range(len(x_ls)):
     con_sys = abs(y_no_sys[idx] - con_y[idx])
     con_sys_ls.append(con_sys)
 
-print(np.shape(con_y))
+print("con_sys_ls shape: ", np.shape(con_sys_ls))
 
 #####################
 ## sys error of mu ##
@@ -57,7 +57,7 @@ for idx in range(len(x_ls)):
     mu_sys = abs(y_no_sys[idx] - mu_y[idx])
     mu_sys_ls.append(mu_sys)
 
-print(np.shape(mu_y))
+print("mu_sys_ls shape: ", np.shape(mu_sys_ls))
 
 ############################
 ## add sys error together ##
@@ -72,6 +72,14 @@ y2 = np.hstack((y2, np.array([0])))
 
 plt.fill_between(x_ls, y1, y2, color='red', alpha=0.5)
 plt.show()
+
+
+# Save pion systematic errors to txt file
+with open('pion_sys_err.txt', 'w') as f:
+    f.write('x\tlambda_extrapolation_sys\tcontinuum_limit_sys\n')  # Header
+    for i in range(len(x_ls) - 1):  # -1 because we added an extra point at x=1
+        f.write(f"{x_ls[i]}\t{ext_sys_ls[i]}\t{con_sys_ls[i]}\n")
+
 
 
 # %%
